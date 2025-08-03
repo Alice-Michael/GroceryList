@@ -23,11 +23,6 @@ menu_options = [
     "Recipes menu"
 ]
 
-recipes_menu_options = [
-    "Show Recipes",
-    "Add recipe",
-    "Delete recipe"
-]
 
 class Home(Screen):
     def __init__(self, **kwargs):
@@ -76,9 +71,9 @@ class Home(Screen):
         elif text == "Add Item":
             self.sm.current = "AddItem"
         elif text == "Delete Item":
-            pass
+            self.sm.current = "DelItemScreen"
         elif text == "Add ingredients from recipe":
-            pass
+            self.sm.current = "addIngredsFromRecipe"
         elif text == "Recipes menu":
             self.sm.current = "RecipesMenu"
         else:
