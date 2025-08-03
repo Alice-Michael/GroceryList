@@ -1,9 +1,20 @@
 # py
 # Shopping List
 
+# kivy includes
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
+from kivy.uix.screenmanager import Screen, ScreenManager
+
+
+# Files
 ITEMS = "persistant_list.txt"
 RECIPES = "MyBuiltRecipes.txt"
 
+# Global List Buffer
 INGREDIENTS_BUFFER = []
 
 def display_list():
@@ -69,4 +80,23 @@ def add_items_from_recipe_book():
                 break
 
     write_items_from_parsed_recipe()
+    return
+
+####################################################################################
+#                                  APP SPECIFIC                                    #
+####################################################################################
+def display_list_app():
+    list_of_items = []
+    with open(ITEMS, "r") as file:
+        for line in file:
+            list_of_items.append(line.strip())
+        
+    print("Shopping list:")
+    for i in list_of_items:
+        print(f"{i}")
+    return list_of_items
+       
+def add_item_to_list_app(incoming_item):
+    with open(ITEMS, "a") as file:
+        file.write(incoming_item.capitalize() + '\n')
     return

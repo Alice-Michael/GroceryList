@@ -1,8 +1,18 @@
 # py
 # Main app invoking the whole project
 
+# Project includes
 import Recipes
 import ShoppingList
+from main import MainApp
+# kivy includes
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
+from kivy.uix.screenmanager import Screen, ScreenManager
+
 
 def display_menu():
      print("\nShopping List Menu:")
@@ -39,4 +49,5 @@ def shopping_list():
     return
 
 # Main flow
-shopping_list()
+#shopping_list()
+MainApp().run()

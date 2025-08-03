@@ -1,7 +1,19 @@
 # python
 # Recipes
 
+# kivy includes
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
+from kivy.uix.dropdown import DropDown
+from kivy.uix.screenmanager import Screen, ScreenManager
+
+
+# Files
 MY_FILE = "MyBuiltRecipes.txt"
+
+# Global Recipes buffer
 LIST_OF_INGREDIENTS_BUFFER = []
 
 def recipes_menu():
@@ -117,3 +129,17 @@ def remove_recipe_from_list():
                 file.write(line)
             not_deleting_line = True
     return
+
+####################################################################################
+#                                  APP SPECIFIC                                    #
+####################################################################################
+def display_list_app():
+    list_of_recipes = []
+    with open(MY_FILE, "r") as file:
+        for line in file:
+            recipe = line.strip()
+            recipe_title, _, _ = recipe.partition(';')
+            list_of_recipes.append(recipe_title)
+    for i in list_of_recipes:
+        print(f"{i}")
+    return list_of_recipes
