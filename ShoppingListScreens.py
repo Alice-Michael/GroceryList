@@ -71,6 +71,52 @@ class AddItemScreen(Screen):
         else:
             pass
 
+
+class DeleteItemScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def initUI(self, screen_manager_handle):
+        self.sm = screen_manager_handle
+        self.title = Label(
+            text="Remove item from list",
+            font_size='20',
+            halign='left',
+            valign='top',
+            font_name="DejaVuSans"
+        )
+        self.back_btn = back_btn = Button(
+            text="Back",
+            size_hint=(1, 0.2),
+            pos_hint={'center_x':0.5},
+            on_press = self.button_click
+        )
+
+        # Add Widgets to layout
+        self.master = BoxLayout()
+        col1 = BoxLayout(orientation='vertical',padding=15)
+
+        # Add Buttons and functionality here and then add to
+        # col1 with col1.addwidget()
+        col1.add_widget(self.title)
+        col1.add_widget(self.back_btn)
+
+        # Add the menu to the row to appear on screen
+        self.master.add_widget(col1)
+
+        # now add this to myself
+        self.add_widget(self.master)
+
+
+    def button_click(self, instance):
+        option_text = instance.text
+
+        if option_text == "Back":
+            self.sm.current = "Home"
+        else:
+            pass
+
+
 class ViewListScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -160,51 +206,6 @@ class AddIngredsFromRecipeScreen(Screen):
             font_name="DejaVuSans"
         )
         self.back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2),
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
-
-        # Add Widgets to layout
-        self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-
-        # Add Buttons and functionality here and then add to
-        # col1 with col1.addwidget()
-        col1.add_widget(self.title)
-        col1.add_widget(self.back_btn)
-
-        # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
-
-        # now add this to myself
-        self.add_widget(self.master)
-
-
-    def button_click(self, instance):
-        option_text = instance.text
-
-        if option_text == "Back":
-            self.sm.current = "Home"
-        else:
-            pass
-
-
-class DeleteItemScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def initUI(self, screen_manager_handle):
-        self.sm = screen_manager_handle
-        self.title = Label(
-            text="Remove item from list",
-            font_size='20',
-            halign='left',
-            valign='top',
-            font_name="DejaVuSans"
-        )
-        self.back_btn = back_btn = Button(
             text="Back",
             size_hint=(1, 0.2),
             pos_hint={'center_x':0.5},
