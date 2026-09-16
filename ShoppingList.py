@@ -1,6 +1,8 @@
 # py
 # Shopping List
 
+import os
+
 # kivy includes
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
@@ -18,14 +20,10 @@ RECIPES = "MyBuiltRecipes.txt"
 INGREDIENTS_BUFFER = []
 
 def display_list():
-    list_of_items = []
+    print("Shopping list:")
     with open(ITEMS, "r") as file:
         for line in file:
-            list_of_items.append(line.strip())
-        
-    print("Shopping list:")
-    for i in list_of_items:
-        print(f"{i}")
+            print(f"{line.strip()}")
     return
 
 
@@ -33,6 +31,7 @@ def add_item_to_list():
     item = input("Enter the item to add: ")
     with open(ITEMS, "a") as file:
         file.write(item.capitalize() + '\n')
+        file.flush()
     return
 
 def delete_item_from_list():
@@ -99,4 +98,6 @@ def display_list_app():
 def add_item_to_list_app(incoming_item):
     with open(ITEMS, "a") as file:
         file.write(incoming_item.capitalize() + '\n')
+        # force the write to happen now.
+        file.flush()
     return

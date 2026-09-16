@@ -23,6 +23,15 @@ class AddItemScreen(Screen):
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
         self.title = Label(text="Add item to list", font_size='45', pos_hint={'top':1}, font_name="DejaVuSans")
+        self.num_items_input = TextInput(hint_text = "Enter how many here", size_hint_y = 0.2)
+        self.item_name_input = TextInput(hint_text = "Enter ingredient here", size_hint_y = 0.2)
+        self.add_btn = Button(
+            text = "Add",
+            size_hint = (0.5, 0.2),
+            pos_hint = {'center_x': 0.5},
+            on_press = self.button_click
+        )
+
         back_btn = Button(
             text="Back",
             size_hint=(1, 0.2), 
@@ -37,6 +46,9 @@ class AddItemScreen(Screen):
         # Add displays into col1
         col1.add_widget(self.title)
         col1.add_widget(back_btn)
+        col1.add_widget(self.num_items_input)
+        col1.add_widget(self.item_name_input)
+        col1.add_widget(self.add_btn)
 
         # Add the menu to the row to appear on screen
         self.master.add_widget(col1)
@@ -49,6 +61,12 @@ class AddItemScreen(Screen):
         option_text = instance.text
 
         if option_text == "Back":
+            self.sm.current = "Home"
+        elif option_text == "Add":
+            item = self.item_name_input.text.capitalize()
+            num = self.num_items_input.text
+            ShoppingList.add_item_to_list_app(f"{num} {item}")
+            print(f"Add button pressed, num: {self.num_items_input.text} item: {self.item_name_input.text}")
             self.sm.current = "Home"
         else:
             pass
@@ -76,22 +94,14 @@ class ViewListScreen(Screen):
 
         # Add Widgets to layout
         self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-        col1.add_widget(self.title)
-        col1.add_widget(self.back_btn)
+        self.col1 = BoxLayout(orientation='vertical',padding=15)
+        self.col1.add_widget(self.title)
+        self.col1.add_widget(self.back_btn)
 
-        list_of_items = ShoppingList.display_list_app()
-        for i in list_of_items:
-            self.shopping_list.text += i
-            list_item_handle = Label(
-                text = f'{i}',
-                size_hint = (1, 0.2),
-                font_name = "DejaVuSans"
-            )
-            col1.add_widget(list_item_handle)
+        self.read_items_from_file()
 
         # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
+        self.master.add_widget(self.col1)
 
         # now add this to myself
         self.add_widget(self.master)
@@ -104,6 +114,35 @@ class ViewListScreen(Screen):
             self.sm.current = "Home"
         else:
             pass
+
+
+    def read_items_from_file(self):
+        self.list_of_items = ShoppingList.display_list_app()
+
+        self.col1.clear_widgets()
+
+        self.col1.add_widget(self.title)
+        self.col1.add_widget(self.back_btn)
+
+        for i in self.list_of_items:
+            self.shopping_list.text += i
+            list_item_handle = Label(
+                text = f'{i}',
+                size_hint = (1, 0.2),
+                font_name = "DejaVuSans"
+            )
+            self.col1.add_widget(list_item_handle)
+
+
+    def on_enter(self, *args):
+        '''
+        on_enter is a kivy hook, it runs when the button is clicked, so it is when the
+        screen is entered this will run.  Because this class controls the list, we want
+        to re-read from the file in case there were changes made to the list.
+        '''
+        self.read_items_from_file()
+
+        return
 
 
 class AddIngredsFromRecipeScreen(Screen):
