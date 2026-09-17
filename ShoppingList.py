@@ -79,7 +79,7 @@ class ShoppingList:
             return []
         return [i.strip() for i in list_of_ingredients.split(";") if i.strip()]
 
-    def add_items_from_recipe_book(find_recipe=None):
+    def add_items_from_recipe_book(self, find_recipe=None):
         """
         Find a recipe in RECIPES and append its ingredients to the shopping list.
         If find_recipe is None, prompt the user (maintains CLI compatibility).
@@ -95,9 +95,9 @@ class ShoppingList:
                 recipe = line.strip()
                 recipe_title, _, list_of_ingredients = recipe.partition(";")
                 if recipe_title == target_title:
-                    ingredients = ShoppingList._parse_ingredients(list_of_ingredients)
+                    ingredients = self._parse_ingredients(list_of_ingredients)
                     for ingr in ingredients:
                         # Each parsed ingredient may already include a quantity; normalize via add_item
-                        ShoppingList.add_item(ingr)
+                        self.add_item(ingr)
                     break
         return
