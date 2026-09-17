@@ -19,6 +19,7 @@ RECIPES = "MyBuiltRecipes.txt"
 
 
 class ShoppingList:
+    @staticmethod
     def display():
         list_of_items = []
         with open(ITEMS, "r", encoding="utf-8") as file:
@@ -30,6 +31,7 @@ class ShoppingList:
             print(f"{i}")
         return list_of_items
 
+    @staticmethod
     def add_item(incoming_item):
         """
         The incoming string should be a quantity followed by an item name, and
@@ -54,6 +56,7 @@ class ShoppingList:
             file.flush()
         return
 
+    @staticmethod
     def delete_item(incoming_item):
         """
         Remove any lines from the ITEMS file that contain the provided incoming_item.
@@ -74,12 +77,14 @@ class ShoppingList:
                     file.write(line)
         return
 
+    @staticmethod
     def _parse_ingredients(list_of_ingredients):
         if not list_of_ingredients:
             return []
         return [i.strip() for i in list_of_ingredients.split(";") if i.strip()]
 
-    def add_items_from_recipe_book(self, find_recipe=None):
+    @staticmethod
+    def add_items_from_recipe_book(find_recipe=None):
         """
         Find a recipe in RECIPES and append its ingredients to the shopping list.
         If find_recipe is None, prompt the user (maintains CLI compatibility).
@@ -88,16 +93,27 @@ class ShoppingList:
         if find_recipe is None:
             find_recipe = input("What recipe do you want to add: ").strip()
 
-        target_title = find_recipe.capitalize()
+        if not find_recipe:
+            return False
+
+        if not os.path.exists(RECIPES):
+            print(f"Recipe file '{RECIPES}' not found.")
+            return False
+
+        target = find_recipe.strip().casefold()
+        added_any = False
 
         with open(RECIPES, "r") as file:
             for line in file:
                 recipe = line.strip()
+                if not recipe:
+                    continue
                 recipe_title, _, list_of_ingredients = recipe.partition(";")
-                if recipe_title == target_title:
-                    ingredients = self._parse_ingredients(list_of_ingredients)
+                if recipe_title.strip().casefold() == target:
+                    ingredients = ShoppingList._parse_ingredients(list_of_ingredients)
                     for ingr in ingredients:
-                        # Each parsed ingredient may already include a quantity; normalize via add_item
-                        self.add_item(ingr)
+                        ShoppingList.add_item(ingr)
+                    added_any = True
                     break
-        return
+
+        return added_any

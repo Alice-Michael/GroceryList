@@ -186,10 +186,37 @@ class AddIngredsFromRecipeScreen(BaseScreen):
             back_target="Home",
         )
 
+        # Text input for entering the recipe title
+        self.recipe_title_input = TextInput(
+            hint_text="Enter recipe title here", size_hint_y=0.2
+        )
+
+        # Button to trigger adding ingredients from the specified recipe
+        self.add_from_recipe_btn = Button(
+            text="Add From Recipe",
+            size_hint=(0.6, 0.2),
+            pos_hint={"center_x": 0.5},
+            on_press=self.button_click,
+        )
+
+        # Add widgets to layout
+        col1.add_widget(self.recipe_title_input)
+        col1.add_widget(self.add_from_recipe_btn)
+
     def button_click(self, instance):
         option_text = instance.text
 
         if option_text == "Back":
+            self.sm.current = "Home"
+        elif option_text == "Add From Recipe":
+            recipe_title = self.recipe_title_input.text.strip()
+            if recipe_title:
+                # Instantiate ShoppingList and call the method that expects self
+                sl = ShoppingList()
+                sl.add_items_from_recipe_book(find_recipe=recipe_title)
+                print(f"Added ingredients from recipe: {recipe_title}")
+            else:
+                print("No recipe title entered; nothing added.")
             self.sm.current = "Home"
         else:
             pass
