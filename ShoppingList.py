@@ -4,15 +4,6 @@
 import os
 import re
 
-# kivy includes
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.screenmanager import Screen, ScreenManager
-
-
 # Files
 ITEMS = "persistant_list.txt"
 RECIPES = "MyBuiltRecipes.txt"
