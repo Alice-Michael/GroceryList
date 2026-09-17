@@ -12,11 +12,12 @@ from kivy.core.window import Window
 
 # App imports
 import ShoppingList
+from BaseScreen import BaseScreen
 
 Window.size = (500, 800)
 
 
-class AddItemScreen(Screen):
+class AddItemScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -32,12 +33,7 @@ class AddItemScreen(Screen):
             on_press = self.button_click
         )
 
-        back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2), 
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -72,7 +68,7 @@ class AddItemScreen(Screen):
             pass
 
 
-class DeleteItemScreen(Screen):
+class DeleteItemScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -94,12 +90,7 @@ class DeleteItemScreen(Screen):
             pos_hint = {'center_x': 0.5},
             on_press = self.button_click
         )
-        self.back_btn = back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2),
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        self.back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -123,24 +114,19 @@ class DeleteItemScreen(Screen):
         if option_text == "Back":
             self.sm.current = "Home"
         elif option_text == "Delete":
-            print(f"delete button pressed.  Deleting {}")
+            print(f"delete button pressed.  Deleting ")
         else:
             pass
 
 
-class ViewListScreen(Screen):
+class ViewListScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
         self.title = Label(text="MyShoppingListApp", font_size='45', font_name="DejaVuSans")
-        self.back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2), 
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        self.back_btn = self.get_back_button()
 
         self.shopping_list = TextInput(
             font_size = 45,
@@ -202,7 +188,7 @@ class ViewListScreen(Screen):
         return
 
 
-class AddIngredsFromRecipeScreen(Screen):
+class AddIngredsFromRecipeScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -216,12 +202,7 @@ class AddIngredsFromRecipeScreen(Screen):
             valign='top',
             font_name="DejaVuSans"
         )
-        self.back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2),
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        self.back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -247,9 +228,8 @@ class AddIngredsFromRecipeScreen(Screen):
         else:
             pass
 
-
 # Screen Template
-#class SCREENNAME(Screen):
+#class SCREENNAME(BaseScreen):
 #    def __init__(self, **kwargs):
 #        super().__init__(**kwargs)
 #

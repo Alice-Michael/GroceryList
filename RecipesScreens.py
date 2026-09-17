@@ -12,6 +12,7 @@ from kivy.core.window import Window
 
 # App imports
 import Recipes
+from BaseScreen import BaseScreen
 
 Window.size = (500, 800)
 
@@ -68,20 +69,17 @@ class RecipesMenu(Screen):
         else:
             pass
 
-class RecipeViewList(Screen):
+class RecipeViewList(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
+        # make Back go to RecipesMenu instead of default Home
+        self.set_back_target("RecipesMenu")
 
         self.title = Label(text="Shopping List", font_size='20', font_name="DejaVuSans")
-        self.back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2), 
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        self.back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -117,19 +115,15 @@ class RecipeViewList(Screen):
             pass
 
 
-class AddRecipeScreen(Screen):
+class AddRecipeScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
+        self.set_back_target("RecipesMenu")
         self.title = Label(text="Add saved recipe", font_size='20', pos_hint={'top':1}, font_name="DejaVuSans")
-        back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2),
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -155,12 +149,13 @@ class AddRecipeScreen(Screen):
             pass
 
 
-class DeleteRecipeScreen(Screen):
+class DeleteRecipeScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
+        self.set_back_target("RecipesMenu")
         self.title = Label(
             text="Remove saved recipe",
             font_size='20',
@@ -168,12 +163,7 @@ class DeleteRecipeScreen(Screen):
             valign='top',
             font_name="DejaVuSans"
         )
-        self.back_btn = back_btn = Button(
-            text="Back",
-            size_hint=(1, 0.2),
-            pos_hint={'center_x':0.5},
-            on_press = self.button_click
-        )
+        self.back_btn = self.get_back_button()
 
         # Add Widgets to layout
         self.master = BoxLayout()
@@ -201,7 +191,7 @@ class DeleteRecipeScreen(Screen):
 
 
 # Screen Template
-#class SCREENNAME(Screen):
+#class SCREENNAME(BaseScreen):
 #    def __init__(self, **kwargs):
 #        super().__init__(**kwargs)
 #
