@@ -1,4 +1,3 @@
-# python
 # kivy imports
 from kivy.app import App
 from kivy.uix.label import Label
@@ -16,12 +15,8 @@ from BaseScreen import BaseScreen
 
 Window.size = (500, 800)
 
-recipes_menu_options = [
-    "Show Recipes",
-    "Add recipe",
-    "Delete recipe",
-    "Back"
-]
+recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Back"]
+
 
 class RecipesMenu(Screen):
     def __init__(self, **kwargs):
@@ -30,30 +25,29 @@ class RecipesMenu(Screen):
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
 
-        self.title = Label(text="Recipes Menu", font_size='20', font_name="DejaVuSans")
+        self.title = Label(text="Recipes Menu", font_size="20", font_name="DejaVuSans")
 
         # Add Widgets to layout
         self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-        
-        # Add Buttons and functionality here and then add to 
+        col1 = BoxLayout(orientation="vertical", padding=15)
+
+        # Add Buttons and functionality here and then add to
         # col1 with col1.addwidget()
         col1.add_widget(self.title)
         for i in recipes_menu_options:
             btn = Button(
-                text= f'{i}',
-                size_hint=(1, 0.2), 
-                pos_hint={'center_x':0.5},
-                on_press = self.button_click
+                text=f"{i}",
+                size_hint=(1, 0.2),
+                pos_hint={"center_x": 0.5},
+                on_press=self.button_click,
             )
             col1.add_widget(btn)
-        
+
         # Add the menu to the row to appear on screen
         self.master.add_widget(col1)
 
         # now add this to myself
         self.add_widget(self.master)
-
 
     def button_click(self, instance):
         option_text = instance.text
@@ -69,42 +63,23 @@ class RecipesMenu(Screen):
         else:
             pass
 
+
 class RecipeViewList(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
-        self.sm = screen_manager_handle
-        # make Back go to RecipesMenu instead of default Home
-        self.set_back_target("RecipesMenu")
-
-        self.title = Label(text="Shopping List", font_size='20', font_name="DejaVuSans")
-        self.back_btn = self.get_back_button()
-
-        # Add Widgets to layout
-        self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-        
-        # Add Buttons and functionality here and then add to 
-        # col1 with col1.addwidget()
-        col1.add_widget(self.title)
-        col1.add_widget(self.back_btn)
+        # create layout and back button via BaseScreen helper
+        col1, back_btn = self.setup_screen(
+            screen_manager_handle,
+            title_text="Shopping List",
+            title_size="20",
+            back_target="RecipesMenu",
+        )
 
         list_of_recipes = Recipes.display_list_app()
-        for i in list_of_recipes:
-            list_item_handle = Label(
-                text = f'{i}',
-                size_hint = (1, 0.2),
-                font_name = "DejaVuSans"
-            )
-            col1.add_widget(list_item_handle)
-
-        # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
-
-        # now add this to myself
-        self.add_widget(self.master)
-
+        # populate items using helper
+        self.populate_list(col1, list_of_recipes)
 
     def button_click(self, instance):
         option_text = instance.text
@@ -120,25 +95,16 @@ class AddRecipeScreen(BaseScreen):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
-        self.sm = screen_manager_handle
-        self.set_back_target("RecipesMenu")
-        self.title = Label(text="Add saved recipe", font_size='20', pos_hint={'top':1}, font_name="DejaVuSans")
-        back_btn = self.get_back_button()
+        # setup base layout with back target
+        col1, back_btn = self.setup_screen(
+            screen_manager_handle,
+            title_text="Add saved recipe",
+            title_size="20",
+            back_target="RecipesMenu",
+        )
 
-        # Add Widgets to layout
-        self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-
-        # Add displays into col1
-        col1.add_widget(self.title)
-        col1.add_widget(back_btn)
-
-        # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
-
-        # now add this to myself
-        self.add_widget(self.master)
-
+        # Add additional widgets if necessary; kept minimal per original
+        # (no additional inputs in original file)
 
     def button_click(self, instance):
         option_text = instance.text
@@ -154,32 +120,17 @@ class DeleteRecipeScreen(BaseScreen):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
-        self.sm = screen_manager_handle
-        self.set_back_target("RecipesMenu")
-        self.title = Label(
-            text="Remove saved recipe",
-            font_size='20',
-            halign='left',
-            valign='top',
-            font_name="DejaVuSans"
+        # Setup with title and back button using helper
+        col1, back_btn = self.setup_screen(
+            screen_manager_handle,
+            title_text="Remove saved recipe",
+            title_size="20",
+            back_target="RecipesMenu",
         )
-        self.back_btn = self.get_back_button()
 
-        # Add Widgets to layout
-        self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
-
-        # Add Buttons and functionality here and then add to
-        # col1 with col1.addwidget()
-        col1.add_widget(self.title)
-        col1.add_widget(self.back_btn)
-
-        # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
-
-        # now add this to myself
-        self.add_widget(self.master)
-
+        # If you need specific title attributes (alignment/valign) keep a custom Label:
+        # self.title = Label(text="Remove saved recipe", font_size='20', halign='left', valign='top', font_name="DejaVuSans")
+        # col1.insert(0, self.title)  # or adjust as needed
 
     def button_click(self, instance):
         option_text = instance.text
@@ -191,7 +142,7 @@ class DeleteRecipeScreen(BaseScreen):
 
 
 # Screen Template
-#class SCREENNAME(BaseScreen):
+# class SCREENNAME(BaseScreen):
 #    def __init__(self, **kwargs):
 #        super().__init__(**kwargs)
 #
@@ -200,8 +151,8 @@ class DeleteRecipeScreen(BaseScreen):
 #        # Add Widgets to layout
 #        self.master = BoxLayout()
 #        col1 = BoxLayout(orientation='vertical',padding=15)
-#        
-#        # Add Buttons and functionality here and then add to 
+#
+#        # Add Buttons and functionality here and then add to
 #        # col1 with col1.addwidget()
 #
 #        # Add the menu to the row to appear on screen
