@@ -9,91 +9,6 @@ ITEMS = "persistant_list.txt"
 RECIPES = "MyBuiltRecipes.txt"
 
 
-def _parse_qty_and_name(item_str):
-    """
-    Parse a string that may start with an integer quantity followed by an item name.
-
-    Returns a tuple: (quantity:int, name:str)
-    If no leading quantity is present, quantity defaults to 1 and name is title-cased.
-    """
-    if not item_str:
-        return 0, ""
-
-    s = item_str.strip()
-    m = re.match(r"^(\d+)\s+(.+)$", s)
-    if m:
-        qty = int(m.group(1))
-        name = m.group(2).title().strip()
-        return qty, name
-    else:
-        return 1, s.title().strip()
-
-
-def _format_item_line(qty, name):
-    """
-    Format the line to write to the file.
-    If qty <= 1, write just the name to preserve previous behavior.
-    """
-    if qty <= 1:
-        return name
-    return f"{qty} {name}"
-
-
-def _add_or_increment(incoming_item):
-    """
-    Add the incoming item to the ITEMS file, or if an item with the same name
-    already exists, increment its quantity.
-
-    incoming_item may be a string like "2 apples" or "apples".
-    """
-    if not incoming_item:
-        return
-
-    incoming_qty, incoming_name = _parse_qty_and_name(incoming_item)
-
-    # Read current items
-    if not os.path.exists(ITEMS):
-        # Ensure file exists before reading/writing
-        open(ITEMS, "a", encoding="utf-8").close()
-
-    with open(ITEMS, "r", encoding="utf-8") as file:
-        lines = [ln.rstrip("\n") for ln in file.readlines()]
-
-    normalized_target = incoming_name.casefold()
-    updated = False
-
-    for idx, line in enumerate(lines):
-        if not line.strip():
-            continue
-
-        existing_qty, existing_name = _parse_qty_and_name(line)
-        if existing_name.casefold() == normalized_target:
-            new_qty = existing_qty + incoming_qty
-            lines[idx] = _format_item_line(new_qty, existing_name)
-            updated = True
-            break
-
-    if updated:
-        # Write back modified list
-        with open(ITEMS, "w", encoding="utf-8") as file:
-            for ln in lines:
-                file.write(ln + "\n")
-            file.flush()
-        return
-
-    # Not found: append as new line
-    new_line = _format_item_line(incoming_qty, incoming_name)
-    with open(ITEMS, "a", encoding="utf-8") as file:
-        file.write(new_line + "\n")
-        file.flush()
-
-
-def _parse_ingredients(list_of_ingredients):
-    if not list_of_ingredients:
-        return []
-    return [i.strip() for i in list_of_ingredients.split(";") if i.strip()]
-
-
 class ShoppingList:
     """
         API:
@@ -183,3 +98,88 @@ class ShoppingList:
                     break
 
         return added_any
+
+
+def _parse_qty_and_name(item_str):
+    """
+    Parse a string that may start with an integer quantity followed by an item name.
+
+    Returns a tuple: (quantity:int, name:str)
+    If no leading quantity is present, quantity defaults to 1 and name is title-cased.
+    """
+    if not item_str:
+        return 0, ""
+
+    s = item_str.strip()
+    m = re.match(r"^(\d+)\s+(.+)$", s)
+    if m:
+        qty = int(m.group(1))
+        name = m.group(2).title().strip()
+        return qty, name
+    else:
+        return 1, s.title().strip()
+
+
+def _format_item_line(qty, name):
+    """
+    Format the line to write to the file.
+    If qty <= 1, write just the name to preserve previous behavior.
+    """
+    if qty <= 1:
+        return name
+    return f"{qty} {name}"
+
+
+def _add_or_increment(incoming_item):
+    """
+    Add the incoming item to the ITEMS file, or if an item with the same name
+    already exists, increment its quantity.
+
+    incoming_item may be a string like "2 apples" or "apples".
+    """
+    if not incoming_item:
+        return
+
+    incoming_qty, incoming_name = _parse_qty_and_name(incoming_item)
+
+    # Read current items
+    if not os.path.exists(ITEMS):
+        # Ensure file exists before reading/writing
+        open(ITEMS, "a", encoding="utf-8").close()
+
+    with open(ITEMS, "r", encoding="utf-8") as file:
+        lines = [ln.rstrip("\n") for ln in file.readlines()]
+
+    normalized_target = incoming_name.casefold()
+    updated = False
+
+    for idx, line in enumerate(lines):
+        if not line.strip():
+            continue
+
+        existing_qty, existing_name = _parse_qty_and_name(line)
+        if existing_name.casefold() == normalized_target:
+            new_qty = existing_qty + incoming_qty
+            lines[idx] = _format_item_line(new_qty, existing_name)
+            updated = True
+            break
+
+    if updated:
+        # Write back modified list
+        with open(ITEMS, "w", encoding="utf-8") as file:
+            for ln in lines:
+                file.write(ln + "\n")
+            file.flush()
+        return
+
+    # Not found: append as new line
+    new_line = _format_item_line(incoming_qty, incoming_name)
+    with open(ITEMS, "a", encoding="utf-8") as file:
+        file.write(new_line + "\n")
+        file.flush()
+
+
+def _parse_ingredients(list_of_ingredients):
+    if not list_of_ingredients:
+        return []
+    return [i.strip() for i in list_of_ingredients.split(";") if i.strip()]
