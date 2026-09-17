@@ -85,6 +85,15 @@ class DeleteItemScreen(Screen):
             valign='top',
             font_name="DejaVuSans"
         )
+        self.item_name_input = TextInput(hint_text = "Enter ingredient here", size_hint_y = 0.2)
+
+        #Buttons
+        self.del_btn = Button(
+            text = "Delete",
+            size_hint = (0.5, 0.2),
+            pos_hint = {'center_x': 0.5},
+            on_press = self.button_click
+        )
         self.back_btn = back_btn = Button(
             text="Back",
             size_hint=(1, 0.2),
@@ -113,6 +122,8 @@ class DeleteItemScreen(Screen):
 
         if option_text == "Back":
             self.sm.current = "Home"
+        elif option_text == "Delete":
+            print(f"delete button pressed.  Deleting {}")
         else:
             pass
 
