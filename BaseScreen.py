@@ -1,7 +1,9 @@
-from kivy.uix.screenmanager import Screen
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
+from kivy.uix.screenmanager import Screen
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.gridlayout import GridLayout
 
 
 class BaseScreen(Screen):
@@ -92,13 +94,27 @@ class BaseScreen(Screen):
         col,
         items,
         font_name: str = "DejaVuSans",
-        size_hint=(1, 0.2)
+        item_height: int = 40
     ):
         """
-        Add a sequence of string-like items as Labels into the provided column layout.
+        Populate `col` (a vertical BoxLayout) with a scrollable list of Buttons
+        for each item in `items`. Buttons are bound to `self.button_click`.
+        Returns the ScrollView.
         """
-        for i in items:
-            list_item_handle = Label(
-                text=str(i), size_hint=size_hint, font_name=font_name
+        scroll = ScrollView(size_hint=(1, 1))
+        list_grid = GridLayout(cols=1, spacing=5, size_hint_y=None, padding=5)
+        list_grid.bind(minimum_height=list_grid.setter("height"))
+
+        for item in items:
+            btn = Button(
+                text=str(item),
+                size_hint_y=None,
+                height=item_height,
             )
-            col.add_widget(list_item_handle)
+            # delegate item press handling to subclass (implement button_click)
+            btn.bind(on_press=self.button_click)
+            list_grid.add_widget(btn)
+
+        scroll.add_widget(list_grid)
+        col.add_widget(scroll)
+        return scroll

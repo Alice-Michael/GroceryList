@@ -145,3 +145,29 @@ class Recipes:
         for i in list_of_recipes:
             print(f"{i}")
         return list_of_recipes
+
+    @staticmethod
+    def get_ingredients(title):
+        """
+        Return the list of ingredients (strings) for a recipe title.
+        Matching is case-insensitive. If not found, returns an empty list.
+        File format: Title;ingredient1;ingredient2;...
+        """
+        if not title:
+            return []
+        target = title.strip().casefold()
+        ingredients = []
+        try:
+            with open(MY_FILE, "r", encoding="utf-8") as file:
+                for line in file:
+                    recipe = line.strip()
+                    if not recipe:
+                        continue
+                    recipe_title, _, list_of_ingredients = recipe.partition(';')
+                    if recipe_title.strip().casefold() == target:
+                        if list_of_ingredients:
+                            ingredients = [i.strip() for i in list_of_ingredients.split(';') if i.strip()]
+                        break
+        except FileNotFoundError:
+            return []
+        return ingredients
