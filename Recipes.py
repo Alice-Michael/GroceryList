@@ -133,13 +133,15 @@ def remove_recipe_from_list():
 ####################################################################################
 #                                  APP SPECIFIC                                    #
 ####################################################################################
-def display():
-    list_of_recipes = []
-    with open(MY_FILE, "r") as file:
-        for line in file:
-            recipe = line.strip()
-            recipe_title, _, _ = recipe.partition(';')
-            list_of_recipes.append(recipe_title)
-    for i in list_of_recipes:
-        print(f"{i}")
-    return list_of_recipes
+class Recipes:
+    @staticmethod
+    def display():
+        list_of_recipes = []
+        with open(MY_FILE, "r") as file:
+            for line in file:
+                recipe = line.strip()
+                recipe_title, _, _ = recipe.partition(';')
+                list_of_recipes.append(recipe_title)
+        for i in list_of_recipes:
+            print(f"{i}")
+        return list_of_recipes

@@ -10,7 +10,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
 
 # App imports
-import Recipes
+from Recipes import Recipes
 from BaseScreen import BaseScreen
 
 Window.size = (500, 800)
@@ -18,36 +18,29 @@ Window.size = (500, 800)
 recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Back"]
 
 
-class RecipesMenu(Screen):
+class RecipesMenu(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
-        self.sm = screen_manager_handle
+        # Use base helper to create layout (no Back button for main menu)
+        col1, _ = self.setup_screen(
+            screen_manager_handle,
+            title_text="Recipes Menu",
+            title_size="20",
+            back_target=None,
+            include_back=False,
+        )
 
-        self.title = Label(text="Recipes Menu", font_size="20", font_name="DejaVuSans")
-
-        # Add Widgets to layout
-        self.master = BoxLayout()
-        col1 = BoxLayout(orientation="vertical", padding=15)
-
-        # Add Buttons and functionality here and then add to
-        # col1 with col1.addwidget()
-        col1.add_widget(self.title)
-        for i in recipes_menu_options:
+        # Add menu options
+        for opt in recipes_menu_options:
             btn = Button(
-                text=f"{i}",
-                size_hint=(1, 0.2),
+                text=f"{opt}",
+                size_hint=(1, 0.12),
                 pos_hint={"center_x": 0.5},
-                on_press=self.button_click,
             )
+            btn.bind(on_press=self.button_click)
             col1.add_widget(btn)
-
-        # Add the menu to the row to appear on screen
-        self.master.add_widget(col1)
-
-        # now add this to myself
-        self.add_widget(self.master)
 
     def button_click(self, instance):
         option_text = instance.text
@@ -72,7 +65,7 @@ class RecipeViewList(BaseScreen):
         # create layout and back button via BaseScreen helper
         col1, back_btn = self.setup_screen(
             screen_manager_handle,
-            title_text="Shopping List",
+            title_text="Recipes",
             title_size="20",
             back_target="RecipesMenu",
         )
@@ -87,6 +80,7 @@ class RecipeViewList(BaseScreen):
         if option_text == "Back":
             self.sm.current = "RecipesMenu"
         else:
+            # item presses can be handled here
             pass
 
 
@@ -104,7 +98,6 @@ class AddRecipeScreen(BaseScreen):
         )
 
         # Add additional widgets if necessary; kept minimal per original
-        # (no additional inputs in original file)
 
     def button_click(self, instance):
         option_text = instance.text
@@ -127,10 +120,6 @@ class DeleteRecipeScreen(BaseScreen):
             title_size="20",
             back_target="RecipesMenu",
         )
-
-        # If you need specific title attributes (alignment/valign) keep a custom Label:
-        # self.title = Label(text="Remove saved recipe", font_size='20', halign='left', valign='top', font_name="DejaVuSans")
-        # col1.insert(0, self.title)  # or adjust as needed
 
     def button_click(self, instance):
         option_text = instance.text
