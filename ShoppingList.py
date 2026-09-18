@@ -96,8 +96,24 @@ def display_list_app():
     return list_of_items
        
 def add_item_to_list_app(incoming_item):
-    with open(ITEMS, "a") as file:
-        file.write(incoming_item.capitalize() + '\n')
+    """
+    The incoming string should be a quantity followed by an item name, and
+    we want to capitalize the item name.
+    """
+    if not incoming_item:
+        return
+
+    incoming_item = incoming_item.strip()
+    parts = incoming_item.split(" ", 1)
+
+    if len(parts) == 1:
+        normalized = parts[0].title()
+    else:
+        qty, rest = parts
+        normalized = f"{qty} {rest.title()}"
+
+    with open(ITEMS, "a", encoding="utf-8") as file:
+        file.write(normalized + "\n")
         # force the write to happen now.
         file.flush()
     return
@@ -105,7 +121,6 @@ def add_item_to_list_app(incoming_item):
 def delete_item_from_list_app(incoming_item):
     """
     Remove any lines from the ITEMS file that contain the provided incoming_item.
-    Matches the same capitalization approach used by add_item_to_list_app.
     """
     if not incoming_item:
         return
