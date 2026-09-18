@@ -10,9 +10,6 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
 
-# App imports
-import ShoppingList
-
 Window.size = (500, 800)
 
 menu_options = [

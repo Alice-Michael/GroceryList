@@ -10,7 +10,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
 
 # App imports
-import ShoppingList
+from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
 
 Window.size = (500, 800)
@@ -193,7 +193,6 @@ class AddIngredsFromRecipeScreen(BaseScreen):
             self.sm.current = "Home"
         else:
             pass
-
 
 # Screen Template
 # class SCREENNAME(BaseScreen):

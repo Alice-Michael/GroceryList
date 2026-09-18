@@ -3,7 +3,7 @@
 
 # Project includes
 import Recipes
-import ShoppingList
+from ShoppingList import ShoppingList
 from main import MainApp
 # kivy includes
 from kivy.app import App
@@ -27,16 +27,29 @@ def display_menu():
 
 def shopping_list():
     while True:
-        display_menu()   
+        display_menu()
 
-        choice = input("Enter your choice (1-7): ")
+        choice = input("Enter your choice (1-9): ")
 
         if choice == '1':
-            ShoppingList.add_item_to_list()
+            # Prompt for quantity and item, then call class method
+            num = input("Enter quantity (leave blank if none): ").strip()
+            item = input("Enter the item to add: ").strip()
+            if num:
+                incoming = f"{num} {item}"
+            else:
+                incoming = item
+            ShoppingList.add_item_to_list_app(incoming)
         elif choice == '2':
-            ShoppingList.delete_item_from_list()
+            # Prompt for item to delete and call class method
+            item = input("What item do you want to remove from the shopping list: ").strip()
+            ShoppingList.delete_item_from_list_app(item)
         elif choice == '3':
-            ShoppingList.display_list()
+            # Display via class method
+            items = ShoppingList.display_list_app()
+            print("\nShopping list:")
+            for line in items:
+                print(line)
         elif choice == '4':
             Recipes.recipes_options()
         elif choice == '5':
@@ -45,9 +58,9 @@ def shopping_list():
             print("Exiting the program. Goodbye!")
             break
         else:
-            print("Invalid choice. Please enter a number between 1 and 4.")
+            print("Invalid choice. Please enter a number between 1 and 9.")
     return
 
 # Main flow
-#shopping_list()
+# shopping_list()
 MainApp().run()
