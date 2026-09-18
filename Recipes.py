@@ -1,20 +1,55 @@
 # python
 # Recipes
 
-# kivy includes
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.screenmanager import Screen, ScreenManager
-
-
 # Files
 MY_FILE = "MyBuiltRecipes.txt"
 
 # Global Recipes buffer
 LIST_OF_INGREDIENTS_BUFFER = []
+
+class Recipes:
+    """
+    API:
+        display
+        get_ingredients(title)
+    """
+    @staticmethod
+    def display():
+        list_of_recipes = []
+        with open(MY_FILE, "r") as file:
+            for line in file:
+                recipe = line.strip()
+                recipe_title, _, _ = recipe.partition(';')
+                list_of_recipes.append(recipe_title)
+        for i in list_of_recipes:
+            print(f"{i}")
+        return list_of_recipes
+
+    @staticmethod
+    def get_ingredients(title):
+        """
+        Return the list of ingredients (strings) for a recipe title.
+        Matching is case-insensitive. If not found, returns an empty list.
+        File format: Title;ingredient1;ingredient2;...
+        """
+        if not title:
+            return []
+        target = title.strip().casefold()
+        ingredients = []
+        try:
+            with open(MY_FILE, "r", encoding="utf-8") as file:
+                for line in file:
+                    recipe = line.strip()
+                    if not recipe:
+                        continue
+                    recipe_title, _, list_of_ingredients = recipe.partition(';')
+                    if recipe_title.strip().casefold() == target:
+                        if list_of_ingredients:
+                            ingredients = [i.strip() for i in list_of_ingredients.split(';') if i.strip()]
+                        break
+        except FileNotFoundError:
+            return []
+        return ingredients
 
 def recipes_menu():
     print("1. Show recipes")
@@ -80,7 +115,7 @@ def get_item_for_recipe():
             while adjusting_size == True:
                 num_items = input("Enter how many: ")
                 if (int(num_items) > 20):
-                    response = input("You entered a large quantity, is {num_items} accurate? (y/n)")
+                    response = input(f"You entered a large quantity, is {num_items} accurate? (y/n)")
                     if response == 'y':
                         print(f"adding {num_items} of {item_for_recipe} to recipe")
                         adjusting_size = False
@@ -129,45 +164,3 @@ def remove_recipe_from_list():
                 file.write(line)
             not_deleting_line = True
     return
-
-####################################################################################
-#                                  APP SPECIFIC                                    #
-####################################################################################
-class Recipes:
-    @staticmethod
-    def display():
-        list_of_recipes = []
-        with open(MY_FILE, "r") as file:
-            for line in file:
-                recipe = line.strip()
-                recipe_title, _, _ = recipe.partition(';')
-                list_of_recipes.append(recipe_title)
-        for i in list_of_recipes:
-            print(f"{i}")
-        return list_of_recipes
-
-    @staticmethod
-    def get_ingredients(title):
-        """
-        Return the list of ingredients (strings) for a recipe title.
-        Matching is case-insensitive. If not found, returns an empty list.
-        File format: Title;ingredient1;ingredient2;...
-        """
-        if not title:
-            return []
-        target = title.strip().casefold()
-        ingredients = []
-        try:
-            with open(MY_FILE, "r", encoding="utf-8") as file:
-                for line in file:
-                    recipe = line.strip()
-                    if not recipe:
-                        continue
-                    recipe_title, _, list_of_ingredients = recipe.partition(';')
-                    if recipe_title.strip().casefold() == target:
-                        if list_of_ingredients:
-                            ingredients = [i.strip() for i in list_of_ingredients.split(';') if i.strip()]
-                        break
-        except FileNotFoundError:
-            return []
-        return ingredients
