@@ -100,7 +100,10 @@ class DeleteItemScreen(BaseScreen):
         if option_text == "Back":
             self.sm.current = "Home"
         elif option_text == "Delete":
-            print(f"delete button pressed.  Deleting ")
+            item = self.item_name_input.text
+            ShoppingList.delete_item_from_list_app(item)
+            print(f"delete button pressed. Deleting {item}")
+            self.sm.current = "Home"
         else:
             pass
 

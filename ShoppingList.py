@@ -101,3 +101,24 @@ def add_item_to_list_app(incoming_item):
         # force the write to happen now.
         file.flush()
     return
+
+def delete_item_from_list_app(incoming_item):
+    """
+    Remove any lines from the ITEMS file that contain the provided incoming_item.
+    Matches the same capitalization approach used by add_item_to_list_app.
+    """
+    if not incoming_item:
+        return
+
+    target = incoming_item.capitalize()
+
+    # Read current items
+    with open(ITEMS, "r") as file:
+        temp_items = file.readlines()
+
+    # Write back only lines that do NOT contain the target string
+    with open(ITEMS, "w") as file:
+        for line in temp_items:
+            if target not in line:
+                file.write(line)
+    return
