@@ -19,7 +19,7 @@ RECIPES = "MyBuiltRecipes.txt"
 
 
 class ShoppingList:
-    def display_list_app():
+    def display():
         list_of_items = []
         with open(ITEMS, "r", encoding="utf-8") as file:
             for line in file:
@@ -30,7 +30,7 @@ class ShoppingList:
             print(f"{i}")
         return list_of_items
 
-    def add_item_to_list_app(incoming_item):
+    def add_item(incoming_item):
         """
         The incoming string should be a quantity followed by an item name, and
         we want to capitalize the item name.
@@ -54,7 +54,7 @@ class ShoppingList:
             file.flush()
         return
 
-    def delete_item_from_list_app(incoming_item):
+    def delete_item(incoming_item):
         """
         Remove any lines from the ITEMS file that contain the provided incoming_item.
         """
@@ -97,7 +97,7 @@ class ShoppingList:
                 if recipe_title == target_title:
                     ingredients = ShoppingList._parse_ingredients(list_of_ingredients)
                     for ingr in ingredients:
-                        # Each parsed ingredient may already include a quantity; normalize via add_item_to_list_app
-                        ShoppingList.add_item_to_list_app(ingr)
+                        # Each parsed ingredient may already include a quantity; normalize via add_item
+                        ShoppingList.add_item(ingr)
                     break
         return

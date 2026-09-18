@@ -77,7 +77,7 @@ class RecipeViewList(BaseScreen):
             back_target="RecipesMenu",
         )
 
-        list_of_recipes = Recipes.display_list_app()
+        list_of_recipes = Recipes.display()
         # populate items using helper
         self.populate_list(col1, list_of_recipes)
 

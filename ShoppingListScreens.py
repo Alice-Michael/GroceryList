@@ -56,7 +56,7 @@ class AddItemScreen(BaseScreen):
         elif option_text == "Add":
             item = self.item_name_input.text.capitalize()
             num = self.num_items_input.text
-            ShoppingList.add_item_to_list_app(f"{num} {item}")
+            ShoppingList.add_item(f"{num} {item}")
             print(
                 f"Add button pressed, num: {self.num_items_input.text} item: {self.item_name_input.text}"
             )
@@ -101,7 +101,7 @@ class DeleteItemScreen(BaseScreen):
             self.sm.current = "Home"
         elif option_text == "Delete":
             item = self.item_name_input.text
-            ShoppingList.delete_item_from_list_app(item)
+            ShoppingList.delete_item(item)
             print(f"delete button pressed. Deleting {item}")
             self.sm.current = "Home"
         else:
@@ -139,7 +139,7 @@ class ViewListScreen(BaseScreen):
             pass
 
     def read_items_from_file(self):
-        self.list_of_items = ShoppingList.display_list_app()
+        self.list_of_items = ShoppingList.display()
 
         # Clear and re-add title/back to preserve them
         self.col1.clear_widgets()

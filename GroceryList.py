@@ -39,14 +39,14 @@ def shopping_list():
                 incoming = f"{num} {item}"
             else:
                 incoming = item
-            ShoppingList.add_item_to_list_app(incoming)
+            ShoppingList.add_item(incoming)
         elif choice == '2':
             # Prompt for item to delete and call class method
             item = input("What item do you want to remove from the shopping list: ").strip()
-            ShoppingList.delete_item_from_list_app(item)
+            ShoppingList.delete_item(item)
         elif choice == '3':
             # Display via class method
-            items = ShoppingList.display_list_app()
+            items = ShoppingList.display()
             print("\nShopping list:")
             for line in items:
                 print(line)

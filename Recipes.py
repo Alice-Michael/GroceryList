@@ -133,7 +133,7 @@ def remove_recipe_from_list():
 ####################################################################################
 #                                  APP SPECIFIC                                    #
 ####################################################################################
-def display_list_app():
+def display():
     list_of_recipes = []
     with open(MY_FILE, "r") as file:
         for line in file:
