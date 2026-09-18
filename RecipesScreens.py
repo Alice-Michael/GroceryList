@@ -101,6 +101,12 @@ class RecipeViewList(BaseScreen):
 class AddRecipeScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self._pending_items = []
+        self._items_container = None
+        self._qty_input = None
+        self._item_input = None
+        self._title_input = None
+        self._status_label = None
 
     def initUI(self, screen_manager_handle):
         # setup base layout with back target
@@ -111,7 +117,76 @@ class AddRecipeScreen(BaseScreen):
             back_target="RecipesMenu",
         )
 
-        # Add additional widgets if necessary; kept minimal per original
+        # Title input
+        self._title_input = TextInput(hint_text="Recipe title", size_hint=(1, 0.1))
+        col1.add_widget(self._title_input)
+
+        # Row to enter qty and item and add to pending list
+        row = BoxLayout(size_hint=(1, 0.1))
+        self._qty_input = TextInput(hint_text="Qty", size_hint=(0.2, 1), input_filter="int")
+        self._item_input = TextInput(hint_text="Item name", size_hint=(0.6, 1))
+        add_btn = Button(text="Add item", size_hint=(0.2, 1))
+        add_btn.bind(on_press=self._on_add_item)
+        row.add_widget(self._qty_input)
+        row.add_widget(self._item_input)
+        row.add_widget(add_btn)
+        col1.add_widget(row)
+
+        # Container to show pending items
+        self._items_container = BoxLayout(orientation="vertical", size_hint=(1, 0.5))
+        col1.add_widget(self._items_container)
+
+        # Save button and status label
+        save_row = BoxLayout(size_hint=(1, 0.1))
+        save_btn = Button(text="Save Recipe", size_hint=(0.5, 1))
+        save_btn.bind(on_press=self._on_save_recipe)
+        self._status_label = Label(text="", size_hint=(0.5, 1))
+        save_row.add_widget(save_btn)
+        save_row.add_widget(self._status_label)
+        col1.add_widget(save_row)
+
+    def _on_add_item(self, instance):
+        qty_text = (self._qty_input.text or "").strip()
+        item_text = (self._item_input.text or "").strip()
+        if not item_text or not qty_text.isdigit() or int(qty_text) <= 0:
+            self._status_label.text = "Enter valid qty and item"
+            return
+        qty = int(qty_text)
+        entry = f"{qty} {item_text}"
+        self._pending_items.append(entry)
+        # update UI list
+        self._items_container.clear_widgets()
+        for it in self._pending_items:
+            self._items_container.add_widget(Label(text=it, size_hint_y=None, height=30))
+        # clear inputs
+        self._qty_input.text = ""
+        self._item_input.text = ""
+        self._status_label.text = f"{len(self._pending_items)} item(s) added"
+
+    def _on_save_recipe(self, instance):
+        title = (self._title_input.text or "").strip()
+        if not title:
+            self._status_label.text = "Enter recipe title"
+            return
+        if not self._pending_items:
+            self._status_label.text = "Add at least one item"
+            return
+        ok = Recipes.add_recipe(title, self._pending_items)
+        if ok:
+            self._status_label.text = "Saved"
+            # clear state and navigate back
+            self._pending_items = []
+            self._items_container.clear_widgets()
+            self._title_input.text = ""
+            # refresh the recipe list screen if present
+            try:
+                view_screen = self.sm.get_screen("ViewRecipesList")
+                view_screen.initUI(self.sm)
+            except Exception:
+                pass
+            self.sm.current = "RecipesMenu"
+        else:
+            self._status_label.text = "Save failed"
 
     def button_click(self, instance):
         option_text = instance.text
@@ -125,6 +200,8 @@ class AddRecipeScreen(BaseScreen):
 class DeleteRecipeScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self._title_input = None
+        self._status_label = None
 
     def initUI(self, screen_manager_handle):
         # Setup with title and back button using helper
@@ -134,6 +211,34 @@ class DeleteRecipeScreen(BaseScreen):
             title_size="20",
             back_target="RecipesMenu",
         )
+
+        self._title_input = TextInput(hint_text="Recipe title to delete", size_hint=(1, 0.1))
+        col1.add_widget(self._title_input)
+
+        btn = Button(text="Delete", size_hint=(1, 0.1))
+        btn.bind(on_press=self._on_delete)
+        col1.add_widget(btn)
+
+        self._status_label = Label(text="", size_hint=(1, 0.1))
+        col1.add_widget(self._status_label)
+
+    def _on_delete(self, instance):
+        title = (self._title_input.text or "").strip()
+        if not title:
+            self._status_label.text = "Enter a title"
+            return
+        removed = Recipes.delete_recipe(title)
+        if removed:
+            self._status_label.text = "Deleted"
+            # refresh list screen if present
+            try:
+                view_screen = self.sm.get_screen("ViewRecipesList")
+                view_screen.initUI(self.sm)
+            except Exception:
+                pass
+            self.sm.current = "RecipesMenu"
+        else:
+            self._status_label.text = "Not found"
 
     def button_click(self, instance):
         option_text = instance.text

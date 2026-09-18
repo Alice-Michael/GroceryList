@@ -7,20 +7,28 @@ MY_FILE = "MyBuiltRecipes.txt"
 # Global Recipes buffer
 LIST_OF_INGREDIENTS_BUFFER = []
 
+
 class Recipes:
     """
     API:
-        display
+        display()
         get_ingredients(title)
+        add_recipe(title, items)
+        delete_recipe(title)
     """
     @staticmethod
     def display():
         list_of_recipes = []
-        with open(MY_FILE, "r") as file:
-            for line in file:
-                recipe = line.strip()
-                recipe_title, _, _ = recipe.partition(';')
-                list_of_recipes.append(recipe_title)
+        try:
+            with open(MY_FILE, "r") as file:
+                for line in file:
+                    recipe = line.strip()
+                    if not recipe:
+                        continue
+                    recipe_title, _, _ = recipe.partition(';')
+                    list_of_recipes.append(recipe_title)
+        except FileNotFoundError:
+            return []
         for i in list_of_recipes:
             print(f"{i}")
         return list_of_recipes
@@ -37,7 +45,7 @@ class Recipes:
         target = title.strip().casefold()
         ingredients = []
         try:
-            with open(MY_FILE, "r", encoding="utf-8") as file:
+            with open(MY_FILE, "r") as file:
                 for line in file:
                     recipe = line.strip()
                     if not recipe:
@@ -50,6 +58,70 @@ class Recipes:
         except FileNotFoundError:
             return []
         return ingredients
+
+    @staticmethod
+    def add_recipe(title, items):
+        """
+        Add a recipe to the file.
+
+        - title: string
+        - items: iterable of strings like "2 Apple" or tuples (qty, name)
+
+        Returns True on success, False on failure.
+        """
+        if not title or not items:
+            return False
+
+        def _format_item(it):
+            if isinstance(it, tuple) and len(it) >= 2:
+                qty, name = int(it[0]), str(it[1]).strip()
+                return f"{qty} {name}"
+            s = str(it).strip()
+            parts = s.split(None, 1)
+            if len(parts) == 1:
+                return f"1 {parts[0]}"
+            return s
+
+        normalized_items = [_format_item(it) for it in items if str(it).strip()]
+        if not normalized_items:
+            return False
+
+        line = title.strip().capitalize() + ";" + ";".join(normalized_items)
+        try:
+            with open(MY_FILE, "a") as file:
+                file.write(line + "\n")
+        except Exception:
+            return False
+        return True
+
+    @staticmethod
+    def delete_recipe(title):
+        """
+        Remove a recipe by title. Returns True if removed.
+        """
+        if not title:
+            return False
+
+        target = title.strip().casefold()
+        try:
+            with open(MY_FILE, "r") as file:
+                lines = file.readlines()
+        except FileNotFoundError:
+            return False
+
+        removed = False
+        try:
+            with open(MY_FILE, "w") as file:
+                for line in lines:
+                    recipe_title, _, rest = line.partition(';')
+                    if recipe_title.strip().casefold() == target:
+                        removed = True
+                        continue
+                    file.write(line)
+        except Exception:
+            return False
+        return removed
+
 
 def recipes_menu():
     print("1. Show recipes")
@@ -84,12 +156,7 @@ def recipes_options():
 
 def display_recipes():
     # Show a list of recipes
-    list_of_recipes = []
-    with open(MY_FILE, "r") as file:
-        for line in file:
-            recipe = line.strip()
-            recipe_title, _, _ = recipe.partition(';')
-            list_of_recipes.append(recipe_title)
+    list_of_recipes = Recipes.display()
     for i in list_of_recipes:
         print(f"{i}")
     return
@@ -120,7 +187,7 @@ def get_item_for_recipe():
                         print(f"adding {num_items} of {item_for_recipe} to recipe")
                         adjusting_size = False
                 else:
-                    print(f"Adding {num_items} of {item_for_recipe} to recipe")
+                    print(f"Adding {num_items} of {item_for_recipe}")
                     adjusting_size = False
 
         still_adding = input("More items to add? (y/n): ")
