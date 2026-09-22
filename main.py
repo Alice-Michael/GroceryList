@@ -1,6 +1,6 @@
 # kivy includes
 from kivy.app import App
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
 from kivy.properties import NumericProperty
 from kivy.utils import platform
