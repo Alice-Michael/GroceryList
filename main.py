@@ -1,58 +1,113 @@
 # kivy includes
 from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.uix.gridlayout import GridLayout
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.core.window import Window
-from kivy.config import Config
+from kivy.properties import NumericProperty
+from kivy.utils import platform
 
-import HomeScreen
-import ShoppingListScreens
-import RecipesScreens
+# Home UI is implemented in HomeScreen.py (class `Home`) to keep layouts out of inline KV
 
-Window.size = (500, 800)
+class MyScreenManager(ScreenManager):
+    pass
 
-class MainApp(App):
-    # kivy looks for build
-    def build(Self):
-        # sm = Screen Manager
-        sm = ScreenManager()
-        homeScreenHandle = HomeScreen.Home(name="Home")
-        view_shopping_list_handle = ShoppingListScreens.ViewListScreen(name="ViewList")
-        add_item_handle = ShoppingListScreens.AddItemScreen(name="AddItem")
-        delete_item_handle = ShoppingListScreens.DeleteItemScreen(name = "DelItemScreen")
-        recipe_list_handle = RecipesScreens.RecipeViewList(name="ViewRecipesList")
-        add_ingreds_from_recipe_handle = ShoppingListScreens.AddIngredsFromRecipeScreen(name = "addIngredsFromRecipe")
-        recipes_menu_handle = RecipesScreens.RecipesMenu(name = "RecipesMenu")
-        recipes_add_recipe_handle = RecipesScreens.AddRecipeScreen(name = "AddRecipeScreen")
-        recipe_delete_handle = RecipesScreens.DeleteRecipeScreen(name = "DelRecipeScreen")
+class MyApp(App):
+    scale = NumericProperty(1.0)
+    BASE_WIDTH = 360.0
+    BASE_HEIGHT = 640.0
 
-        homeScreenHandle.initUI(sm)
-        view_shopping_list_handle.initUI(sm)
-        add_item_handle.initUI(sm)
-        delete_item_handle.initUI(sm)
-        recipe_list_handle.initUI(sm)
-        add_ingreds_from_recipe_handle.initUI(sm)
-        recipes_menu_handle.initUI(sm)
-        recipes_add_recipe_handle.initUI(sm)
-        recipe_delete_handle.initUI(sm)
+    def build(self):
+        # Load Home screen implementation from HomeScreen.py and initialize it
+        try:
+            from HomeScreen import Home
+        except Exception:
+            Home = None
+        if platform == 'android':
+            Window.fullscreen = 'auto'
+        self._update_scale(Window.size)
+        Window.bind(on_resize=self._on_window_resize)
+        # Create ScreenManager and register screens from other modules
+        sm = MyScreenManager()
 
-        sm.add_widget(homeScreenHandle)
-        sm.add_widget(view_shopping_list_handle)
-        sm.add_widget(add_item_handle)
-        sm.add_widget(delete_item_handle)
-        sm.add_widget(recipe_list_handle)
-        sm.add_widget(add_ingreds_from_recipe_handle)
-        sm.add_widget(recipes_menu_handle)
-        sm.add_widget(recipes_add_recipe_handle)
-        sm.add_widget(recipe_delete_handle)
+        # Home screen (initialize via Home.initUI so layout/back button work)
+        if Home:
+            h = Home(name='Home')
+            try:
+                h.initUI(sm)
+            except Exception:
+                # fallback: add the screen without explicit init
+                pass
+            sm.add_widget(h)
+
+        # Import and register shopping list screens
+        try:
+            from ShoppingListScreens import (
+                AddItemScreen,
+                DeleteItemScreen,
+                ViewListScreen,
+                AddIngredsFromRecipeScreen,
+            )
+
+            s = AddItemScreen(name='AddItemScreen')
+            s.initUI(sm)
+            sm.add_widget(s)
+
+            s = DeleteItemScreen(name='DeleteItemScreen')
+            s.initUI(sm)
+            sm.add_widget(s)
+
+            s = ViewListScreen(name='ViewListScreen')
+            s.initUI(sm)
+            sm.add_widget(s)
+
+            s = AddIngredsFromRecipeScreen(name='AddIngredsFromRecipeScreen')
+            s.initUI(sm)
+            sm.add_widget(s)
+        except Exception:
+            # If the module isn't present or fails to initialize, skip registering
+            pass
+
+        # Import and register recipe screens
+        try:
+            from RecipesScreens import (
+                RecipesMenu,
+                RecipeViewList,
+                AddRecipeScreen,
+                DeleteRecipeScreen,
+                RecipeDetailScreen,
+            )
+
+            r = RecipesMenu(name='RecipesMenu')
+            r.initUI(sm)
+            sm.add_widget(r)
+
+            r = RecipeViewList(name='ViewRecipesList')
+            r.initUI(sm)
+            sm.add_widget(r)
+
+            r = AddRecipeScreen(name='AddRecipeScreen')
+            r.initUI(sm)
+            sm.add_widget(r)
+
+            r = DeleteRecipeScreen(name='DelRecipeScreen')
+            r.initUI(sm)
+            sm.add_widget(r)
+
+            r = RecipeDetailScreen(name='RecipeDetail')
+            r.initUI(sm)
+            sm.add_widget(r)
+        except Exception:
+            pass
 
         return sm
 
+    def _on_window_resize(self, window, width, height):
+        self._update_scale((width, height))
 
-if __name__ == "__main__":
-    Config.set('kivy', 'keyboard_mode', 'systemandmulti')
-    MainApp().run()
+    def _update_scale(self, size):
+        width, height = size
+        scale_w = width / self.BASE_WIDTH
+        scale_h = height / self.BASE_HEIGHT
+        self.scale = min(scale_w, scale_h)
+
+if __name__ == '__main__':
+    MyApp().run()

@@ -4,7 +4,7 @@
 # Project includes
 import Recipes
 from ShoppingList import ShoppingList
-from main import MainApp
+from main import MyApp as MainApp
 # kivy includes
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout

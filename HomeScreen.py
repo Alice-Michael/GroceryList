@@ -1,6 +1,7 @@
 # python
 # kivy imports
 from kivy.app import App
+from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
@@ -13,11 +14,11 @@ from kivy.core.window import Window
 Window.size = (500, 800)
 
 menu_options = [
-    "View List",
-    "Add Item",
-    "Delete Item",
+    "View list",
+    "Add item",
+    "Delete item",
     "Add ingredients from recipe",
-    "Recipes menu"
+    "Recipes menu",
 ]
 
 
@@ -27,13 +28,21 @@ class Home(Screen):
 
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
-        self.title = Label(text="MyShoppingListApp", font_size='45', font_name="DejaVuSans")
+        self.title = Label(text="Get Food", font_size='45', font_name="DejaVuSans")
 
         # Add Widgets to layout
         self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical',padding=15)
+        col1 = BoxLayout(orientation='vertical', padding=15)
 
-        # Make the first item the banner title.
+        # Logo (if present) above the title
+        try:
+            logo = Image(source='logo.jpg', size_hint=(1, 1))
+            col1.add_widget(logo)
+        except Exception:
+            # If image fails to load, continue without breaking the UI
+            pass
+
+        # Make the first visible item the banner title.
         col1.add_widget(self.title)
 
         # Menu options
@@ -63,14 +72,15 @@ class Home(Screen):
     def button_click(self, instance):
         text = instance.text
 
-        if text == "View List":
-            self.sm.current = "ViewList"
-        elif text == "Add Item":
-            self.sm.current = "AddItem"
-        elif text == "Delete Item":
-            self.sm.current = "DelItemScreen"
+        # Map menu labels to the screen names registered in main.py
+        if text == "View list":
+            self.sm.current = "ViewListScreen"
+        elif text == "Add item":
+            self.sm.current = "AddItemScreen"
+        elif text == "Delete item":
+            self.sm.current = "DeleteItemScreen"
         elif text == "Add ingredients from recipe":
-            self.sm.current = "addIngredsFromRecipe"
+            self.sm.current = "AddIngredsFromRecipeScreen"
         elif text == "Recipes menu":
             self.sm.current = "RecipesMenu"
         else:
