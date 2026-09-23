@@ -42,7 +42,6 @@ class MyApp(App):
         try:
             from ShoppingListScreens import (
                 AddItemScreen,
-                DeleteItemScreen,
                 ViewListScreen,
                 AddIngredsFromRecipeScreen,
             )
@@ -53,15 +52,6 @@ class MyApp(App):
             except Exception:
                 import traceback
                 print("Error initializing AddItemScreen:")
-                traceback.print_exc()
-            sm.add_widget(s)
-
-            s = DeleteItemScreen(name='DeleteItemScreen')
-            try:
-                s.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing DeleteItemScreen:")
                 traceback.print_exc()
             sm.add_widget(s)
 

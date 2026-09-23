@@ -8,6 +8,13 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.image import Image
+
+
+# Small Image-button class that preserves image aspect ratio and acts like a button
+class IconButton(ButtonBehavior, Image):
+    pass
 
 # App imports
 from ShoppingList import ShoppingList
@@ -64,49 +71,6 @@ class AddItemScreen(BaseScreen):
             pass
 
 
-class DeleteItemScreen(BaseScreen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def initUI(self, screen_manager_handle):
-        # Setup base layout with title and back button
-        col1, back_btn = self.setup_screen(
-            screen_manager_handle,
-            title_text="Remove item from list",
-            title_size="20",
-            back_target="Home",
-        )
-
-        self.item_name_input = TextInput(
-            hint_text="Enter ingredient here", size_hint_y=0.2
-        )
-
-        # Buttons
-        self.del_btn = Button(
-            text="Delete",
-            size_hint=(0.5, 0.2),
-            pos_hint={"center_x": 0.5},
-            on_press=self.button_click,
-        )
-
-        # Add specific widgets
-        col1.add_widget(self.item_name_input)
-        col1.add_widget(self.del_btn)
-
-    def button_click(self, instance):
-        option_text = instance.text
-
-        if option_text == "Back":
-            self.sm.current = "Home"
-        elif option_text == "Delete":
-            item = self.item_name_input.text
-            ShoppingList.delete_item(item)
-            print(f"delete button pressed. Deleting {item}")
-            self.sm.current = "Home"
-        else:
-            pass
-
-
 class ViewListScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -147,10 +111,46 @@ class ViewListScreen(BaseScreen):
         add_btn.bind(on_press=self._on_add_button)
         self.col1.add_widget(add_btn)
 
-        # populate list as visible label rows
+        # populate list as rows with a label and a delete button
+        app = App.get_running_app()
+        row_height = dp(40) * (app.scale if app else 1)
         for i in self.list_of_items:
-            list_item_handle = Label(text=f"{i}", size_hint=(1, 0.2), font_name="DejaVuSans")
-            self.col1.add_widget(list_item_handle)
+            # horizontal row for item
+            row = BoxLayout(orientation='horizontal', size_hint_y=None, height=row_height)
+            row.spacing = dp(8) * (app.scale if app else 1)
+            lbl = Label(text=f"{i}", size_hint_x=1, halign='left', valign='middle', font_name="DejaVuSans")
+            lbl.bind(size=lbl.setter('text_size'))
+
+            # delete button uses an image if available, otherwise fallback to text
+            del_btn = IconButton(
+                source='x_icon.png',
+                size_hint_x=None,
+                width=row_height * 0.8,
+                allow_stretch=False,
+                keep_ratio=True,
+            )
+            try:
+                # try to use an x icon file named 'x_icon.png'
+                del_btn.background_normal = 'x_icon.png'
+                del_btn.background_down = 'x_icon.png'
+                del_btn.text = ''
+                # ensure button uses the image as-is
+                del_btn.background_color = (1, 1, 1, 1)
+            except Exception:
+                del_btn.text = 'Del'
+
+            # bind delete action; capture current item in default arg
+            def _on_del(instance, item=i):
+                ShoppingList.delete_item(item)
+                # refresh list view after delete
+                self.read_items_from_file()
+
+            del_btn.bind(on_press=_on_del)
+
+            # place delete button on the left, label to the right
+            row.add_widget(del_btn)
+            row.add_widget(lbl)
+            self.col1.add_widget(row)
 
     def on_enter(self, *args):
         """

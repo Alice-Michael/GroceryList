@@ -11,7 +11,6 @@ from kivy.metrics import sp, dp
 
 menu_options = [
     "View list",
-    "Delete item",
     "Add ingredients from recipe",
     "Recipes menu",
 ]
@@ -76,8 +75,6 @@ class Home(Screen):
             self.sm.current = "ViewListScreen"
         elif text == "Add item":
             self.sm.current = "AddItemScreen"
-        elif text == "Delete item":
-            self.sm.current = "DeleteItemScreen"
         elif text == "Add ingredients from recipe":
             self.sm.current = "AddIngredsFromRecipeScreen"
         elif text == "Recipes menu":
