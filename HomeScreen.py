@@ -11,7 +11,6 @@ from kivy.metrics import sp, dp
 
 menu_options = [
     "View list",
-    "Add item",
     "Delete item",
     "Add ingredients from recipe",
     "Recipes menu",

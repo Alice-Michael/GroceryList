@@ -24,7 +24,7 @@ class AddItemScreen(BaseScreen):
             screen_manager_handle,
             title_text="Add item to list",
             title_size="45",
-            back_target="Home",
+            back_target="ViewListScreen",
         )
 
         # Fields and buttons specific to this screen
@@ -50,7 +50,7 @@ class AddItemScreen(BaseScreen):
         option_text = instance.text
 
         if option_text == "Back":
-            self.sm.current = "Home"
+            self.sm.current = "ViewListScreen"
         elif option_text == "Add":
             item = self.item_name_input.text.capitalize()
             num = self.num_items_input.text
@@ -58,7 +58,8 @@ class AddItemScreen(BaseScreen):
             print(
                 f"Add button pressed, num: {self.num_items_input.text} item: {self.item_name_input.text}"
             )
-            self.sm.current = "Home"
+            # After adding, return to the view list screen
+            self.sm.current = "ViewListScreen"
         else:
             pass
 
@@ -118,14 +119,6 @@ class ViewListScreen(BaseScreen):
             back_target="Home",
         )
 
-        app = App.get_running_app()
-        self.shopping_list = TextInput(
-            font_size=sp(16) * (app.scale if app else 1), size_hint_y=0.2, halign="left", multiline=True
-        )
-
-        # Add the shopping_text input to layout, then populate list below
-        col1.add_widget(self.shopping_list)
-
         # read and add list items into the column
         self.read_items_from_file()
 
@@ -149,18 +142,14 @@ class ViewListScreen(BaseScreen):
         if hasattr(self, "back_btn") and self.back_btn:
             self.col1.add_widget(self.back_btn)
 
-        # Reset the shopping_text input
-        if hasattr(self, "shopping_list"):
-            self.shopping_list.text = ""
+        # Add an Add-item button that navigates to the AddItemScreen
+        add_btn = Button(text="Add item", size_hint=(1, 0.1))
+        add_btn.bind(on_press=self._on_add_button)
+        self.col1.add_widget(add_btn)
 
-        # populate list
+        # populate list as visible label rows
         for i in self.list_of_items:
-            if hasattr(self, "shopping_list"):
-                self.shopping_list.text += i
-            # add visible label rows
-            list_item_handle = Label(
-                text=f"{i}", size_hint=(1, 0.2), font_name="DejaVuSans"
-            )
+            list_item_handle = Label(text=f"{i}", size_hint=(1, 0.2), font_name="DejaVuSans")
             self.col1.add_widget(list_item_handle)
 
     def on_enter(self, *args):
@@ -171,6 +160,11 @@ class ViewListScreen(BaseScreen):
         """
         self.read_items_from_file()
         return
+
+    def _on_add_button(self, instance):
+        # Navigate to the add-item screen
+        if hasattr(self, 'sm') and self.sm:
+            self.sm.current = 'AddItemScreen'
 
 
 class AddIngredsFromRecipeScreen(BaseScreen):
