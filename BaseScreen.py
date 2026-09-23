@@ -4,6 +4,9 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.gridlayout import GridLayout
+from kivy.uix.button import Button
+from kivy.app import App
+from kivy.metrics import dp
 
 
 class BaseScreen(Screen):
@@ -68,7 +71,18 @@ class BaseScreen(Screen):
 
         # create main layout containers
         self.master = BoxLayout()
-        self.col1 = BoxLayout(orientation="vertical", padding=padding)
+
+        # Compute scaled padding; safe-area handling is done by the app root
+        app = None
+        try:
+            app = App.get_running_app()
+        except Exception:
+            app = None
+        scale = getattr(app, "scale", 1)
+        base_pad = dp(padding) * (scale if scale else 1)
+        pad_tuple = (base_pad, base_pad, base_pad, base_pad)
+
+        self.col1 = BoxLayout(orientation="vertical", padding=pad_tuple)
 
         # optional title
         self.back_btn = None
@@ -83,7 +97,7 @@ class BaseScreen(Screen):
             self.back_btn = self.get_back_button()
             self.col1.add_widget(self.back_btn)
 
-        # attach
+        # attach main column into the float root and add to screen
         self.master.add_widget(self.col1)
         self.add_widget(self.master)
 

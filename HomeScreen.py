@@ -21,7 +21,6 @@ class Home(Screen):
         super().__init__(**kwargs)
 
     def initUI(self, screen_manager_handle):
-        print("Home.initUI called")
         self.sm = screen_manager_handle
         app = App.get_running_app()
         self.title = Label(text="Get Food", font_size=sp(24) * (app.scale if app else 1), font_name="DejaVuSans")
@@ -33,7 +32,7 @@ class Home(Screen):
         # Logo (if present) above the title
         try:
             # Limit logo to the top portion so menu remains visible
-            logo = Image(source='logo.jpg', size_hint=(1, 1))
+            logo = Image(source='logo.png', size_hint=(1, 1))
             print(f"Home: logo widget created, source=logo.jpg")
             col1.add_widget(logo)
         except Exception as e:
