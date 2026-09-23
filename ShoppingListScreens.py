@@ -1,5 +1,6 @@
 # kivy imports
 from kivy.app import App
+from kivy.metrics import sp, dp
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
@@ -7,13 +8,10 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
-from kivy.core.window import Window
 
 # App imports
 from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
-
-Window.size = (500, 800)
 
 
 class AddItemScreen(BaseScreen):
@@ -120,8 +118,9 @@ class ViewListScreen(BaseScreen):
             back_target="Home",
         )
 
+        app = App.get_running_app()
         self.shopping_list = TextInput(
-            font_size=45, size_hint_y=0.2, halign="left", multiline=True
+            font_size=sp(16) * (app.scale if app else 1), size_hint_y=0.2, halign="left", multiline=True
         )
 
         # Add the shopping_text input to layout, then populate list below

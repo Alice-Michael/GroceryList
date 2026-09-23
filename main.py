@@ -5,8 +5,6 @@ from kivy.core.window import Window
 from kivy.properties import NumericProperty
 from kivy.utils import platform
 
-# Home UI is implemented in HomeScreen.py (class `Home`) to keep layouts out of inline KV
-
 class MyScreenManager(ScreenManager):
     pass
 
@@ -28,14 +26,16 @@ class MyApp(App):
         # Create ScreenManager and register screens from other modules
         sm = MyScreenManager()
 
-        # Home screen (initialize via Home.initUI so layout/back button work)
+        # Home screen
         if Home:
             h = Home(name='Home')
             try:
                 h.initUI(sm)
-            except Exception:
-                # fallback: add the screen without explicit init
-                pass
+            except Exception as e:
+                # Log traceback so initialization errors are visible during startup
+                import traceback
+                print("Error initializing Home screen:")
+                traceback.print_exc()
             sm.add_widget(h)
 
         # Import and register shopping list screens
@@ -48,23 +48,44 @@ class MyApp(App):
             )
 
             s = AddItemScreen(name='AddItemScreen')
-            s.initUI(sm)
+            try:
+                s.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing AddItemScreen:")
+                traceback.print_exc()
             sm.add_widget(s)
 
             s = DeleteItemScreen(name='DeleteItemScreen')
-            s.initUI(sm)
+            try:
+                s.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing DeleteItemScreen:")
+                traceback.print_exc()
             sm.add_widget(s)
 
             s = ViewListScreen(name='ViewListScreen')
-            s.initUI(sm)
+            try:
+                s.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing ViewListScreen:")
+                traceback.print_exc()
             sm.add_widget(s)
 
             s = AddIngredsFromRecipeScreen(name='AddIngredsFromRecipeScreen')
-            s.initUI(sm)
+            try:
+                s.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing AddIngredsFromRecipeScreen:")
+                traceback.print_exc()
             sm.add_widget(s)
         except Exception:
-            # If the module isn't present or fails to initialize, skip registering
-            pass
+            import traceback
+            print("Error importing ShoppingListScreens:")
+            traceback.print_exc()
 
         # Import and register recipe screens
         try:
@@ -77,26 +98,53 @@ class MyApp(App):
             )
 
             r = RecipesMenu(name='RecipesMenu')
-            r.initUI(sm)
+            try:
+                r.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing RecipesMenu:")
+                traceback.print_exc()
             sm.add_widget(r)
 
             r = RecipeViewList(name='ViewRecipesList')
-            r.initUI(sm)
+            try:
+                r.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing RecipeViewList:")
+                traceback.print_exc()
             sm.add_widget(r)
 
             r = AddRecipeScreen(name='AddRecipeScreen')
-            r.initUI(sm)
+            try:
+                r.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing AddRecipeScreen:")
+                traceback.print_exc()
             sm.add_widget(r)
 
             r = DeleteRecipeScreen(name='DelRecipeScreen')
-            r.initUI(sm)
+            try:
+                r.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing DeleteRecipeScreen:")
+                traceback.print_exc()
             sm.add_widget(r)
 
             r = RecipeDetailScreen(name='RecipeDetail')
-            r.initUI(sm)
+            try:
+                r.initUI(sm)
+            except Exception:
+                import traceback
+                print("Error initializing RecipeDetail:")
+                traceback.print_exc()
             sm.add_widget(r)
         except Exception:
-            pass
+            import traceback
+            print("Error importing RecipesScreens:")
+            traceback.print_exc()
 
         return sm
 

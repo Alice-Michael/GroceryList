@@ -7,14 +7,13 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import Screen, ScreenManager
 from kivy.uix.gridlayout import GridLayout
-from kivy.core.window import Window
 from kivy.uix.scrollview import ScrollView
+
+from kivy.metrics import sp, dp
 
 # App imports
 from Recipes import Recipes
 from BaseScreen import BaseScreen
-
-Window.size = (500, 800)
 
 recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Back"]
 
@@ -156,8 +155,9 @@ class AddRecipeScreen(BaseScreen):
         self._pending_items.append(entry)
         # update UI list
         self._items_container.clear_widgets()
+        app = App.get_running_app()
         for it in self._pending_items:
-            self._items_container.add_widget(Label(text=it, size_hint_y=None, height=30))
+            self._items_container.add_widget(Label(text=it, size_hint_y=None, height=dp(30) * (app.scale if app else 1)))
         # clear inputs
         self._qty_input.text = ""
         self._item_input.text = ""
@@ -296,8 +296,9 @@ class RecipeDetailScreen(BaseScreen):
         list_grid = GridLayout(cols=1, spacing=5, size_hint_y=None, padding=5)
         list_grid.bind(minimum_height=list_grid.setter("height"))
 
+        app = App.get_running_app()
         for ingr in ingredients:
-            lbl = Label(text=str(ingr), size_hint_y=None, height=30)
+            lbl = Label(text=str(ingr), size_hint_y=None, height=dp(30) * (app.scale if app else 1))
             list_grid.add_widget(lbl)
 
         scroll.add_widget(list_grid)
