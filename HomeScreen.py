@@ -32,8 +32,8 @@ class Home(Screen):
         # Logo (if present) above the title
         try:
             # Limit logo to the top portion so menu remains visible
-            logo = Image(source='logo.png', size_hint=(1, 1))
-            print(f"Home: logo widget created, source=logo.jpg")
+            logo = Image(source='images/logo.png', size_hint=(1, 1))
+            print(f"Home: logo widget created, source=images/logo.png")
             col1.add_widget(logo)
         except Exception as e:
             # If image fails to load, continue without breaking the UI

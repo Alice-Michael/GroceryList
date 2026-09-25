@@ -124,7 +124,7 @@ class ViewListScreen(BaseScreen):
 
             # delete button uses an image if available, otherwise fallback to text
             del_btn = IconButton(
-                source='x_icon.png',
+                source='images/x_icon.png',
                 size_hint_x=None,
                 width=row_height * 0.8,
                 allow_stretch=False,
@@ -132,8 +132,8 @@ class ViewListScreen(BaseScreen):
             )
             try:
                 # try to use an x icon file named 'x_icon.png'
-                del_btn.background_normal = 'x_icon.png'
-                del_btn.background_down = 'x_icon.png'
+                del_btn.background_normal = 'images/x_icon.png'
+                del_btn.background_down = 'images/x_icon.png'
                 del_btn.text = ''
                 # ensure button uses the image as-is
                 del_btn.background_color = (1, 1, 1, 1)
