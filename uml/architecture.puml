@@ -1,0 +1,85 @@
+@startuml
+' GroceryList project class diagram
+' Generated from repository structure
+
+class MyApp {
+  - scale: NumericProperty
+  - BASE_WIDTH
+  - BASE_HEIGHT
+  + build()
+  + _update_scale(size)
+  + apply_android_insets()
+}
+
+class MyRootLayout {
+  + content_area: BoxLayout
+  + bottom_spacer: Widget
+}
+
+class MyScreenManager
+
+MyApp --> MyRootLayout : owns
+MyRootLayout --> MyScreenManager : contains
+
+class BaseScreen {
+  - back_target
+  - back_btn
+  - sm
+  - master
+  - col1
+  - title
+  + setup_screen(...)
+  + get_back_button(...)
+  + populate_list(...)
+}
+
+class Home <<Screen>> {
+  + initUI(sm)
+  + button_click(instance)
+}
+
+class AddItemScreen <<BaseScreen>>
+class ViewListScreen <<BaseScreen>>
+class AddIngredsFromRecipeScreen <<BaseScreen>>
+
+BaseScreen <|-- AddItemScreen
+BaseScreen <|-- ViewListScreen
+BaseScreen <|-- AddIngredsFromRecipeScreen
+Screen <|-- Home
+
+MyScreenManager ..|> ScreenManager
+
+class RecipesMenu <<BaseScreen>>
+class RecipeViewList <<BaseScreen>>
+class AddRecipeScreen <<BaseScreen>>
+class DeleteRecipeScreen <<BaseScreen>>
+class RecipeDetailScreen <<BaseScreen>>
+
+BaseScreen <|-- RecipesMenu
+BaseScreen <|-- RecipeViewList
+BaseScreen <|-- AddRecipeScreen
+BaseScreen <|-- DeleteRecipeScreen
+BaseScreen <|-- RecipeDetailScreen
+
+class ShoppingList {
+  + add_item(item)
+  + delete_item(item)
+  + display(): list
+  + add_items_from_recipe_book(find_recipe)
+}
+
+class Recipes {
+  + display(): list
+  + add_recipe(title, items)
+  + delete_recipe(title)
+  + get_ingredients(title)
+}
+
+AddItemScreen ..> ShoppingList : uses
+ViewListScreen ..> ShoppingList : uses
+AddIngredsFromRecipeScreen ..> ShoppingList : uses
+RecipeViewList ..> Recipes : uses
+RecipeDetailScreen ..> Recipes : uses
+AddRecipeScreen ..> Recipes : uses
+
+@enduml
