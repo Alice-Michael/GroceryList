@@ -175,7 +175,7 @@ class AddIngredsFromRecipeScreen(BaseScreen):
     def initUI(self, screen_manager_handle):
         col1, back_btn = self.setup_screen(
             screen_manager_handle,
-            title_text="Add Ingredients to shopping list from recipe",
+            title_text="Add Ingredients from recipe",
             title_size="20",
             back_target="Home",
         )
