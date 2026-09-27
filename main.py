@@ -7,6 +7,15 @@ from kivy.utils import platform
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.clock import mainthread
+from kivy.metrics import dp
+
+import traceback
+
+# App
+from HomeScreen import Home
+from ShoppingListScreens import AddItemScreen, ViewListScreen, AddIngredsFromRecipeScreen
+from RecipesScreens import RecipesMenu, RecipeViewList, AddRecipeScreen, DeleteRecipeScreen, RecipeDetailScreen
+
 
 class MyScreenManager(ScreenManager):
     pass
@@ -38,12 +47,6 @@ class MyApp(App):
         # Build a root layout that reserves a bottom spacer for system UI insets
         root = MyRootLayout()
 
-        # Load Home screen implementation from HomeScreen.py and initialize it
-        try:
-            from HomeScreen import Home
-        except Exception:
-            Home = None
-
         if platform == 'android':
             Window.fullscreen = 'auto'
 
@@ -56,108 +59,76 @@ class MyApp(App):
             try:
                 h.initUI(sm)
             except Exception:
-                import traceback
                 print("Error initializing Home screen:")
                 traceback.print_exc()
             sm.add_widget(h)
 
-        # Import and register shopping list screens
+        # Register shopping list screens
+        s = AddItemScreen(name='AddItemScreen')
         try:
-            from ShoppingListScreens import (
-                AddItemScreen,
-                ViewListScreen,
-                AddIngredsFromRecipeScreen,
-            )
-
-            s = AddItemScreen(name='AddItemScreen')
-            try:
-                s.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing AddItemScreen:")
-                traceback.print_exc()
-            sm.add_widget(s)
-
-            s = ViewListScreen(name='ViewListScreen')
-            try:
-                s.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing ViewListScreen:")
-                traceback.print_exc()
-            sm.add_widget(s)
-
-            s = AddIngredsFromRecipeScreen(name='AddIngredsFromRecipeScreen')
-            try:
-                s.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing AddIngredsFromRecipeScreen:")
-                traceback.print_exc()
-            sm.add_widget(s)
+            s.initUI(sm)
         except Exception:
-            import traceback
-            print("Error importing ShoppingListScreens:")
+            print("Error initializing AddItemScreen:")
             traceback.print_exc()
+        sm.add_widget(s)
 
-        # Import and register recipe screens
+        s = ViewListScreen(name='ViewListScreen')
         try:
-            from RecipesScreens import (
-                RecipesMenu,
-                RecipeViewList,
-                AddRecipeScreen,
-                DeleteRecipeScreen,
-                RecipeDetailScreen,
-            )
-
-            r = RecipesMenu(name='RecipesMenu')
-            try:
-                r.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing RecipesMenu:")
-                traceback.print_exc()
-            sm.add_widget(r)
-
-            r = RecipeViewList(name='ViewRecipesList')
-            try:
-                r.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing RecipeViewList:")
-                traceback.print_exc()
-            sm.add_widget(r)
-
-            r = AddRecipeScreen(name='AddRecipeScreen')
-            try:
-                r.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing AddRecipeScreen:")
-                traceback.print_exc()
-            sm.add_widget(r)
-
-            r = DeleteRecipeScreen(name='DelRecipeScreen')
-            try:
-                r.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing DeleteRecipeScreen:")
-                traceback.print_exc()
-            sm.add_widget(r)
-
-            r = RecipeDetailScreen(name='RecipeDetail')
-            try:
-                r.initUI(sm)
-            except Exception:
-                import traceback
-                print("Error initializing RecipeDetail:")
-                traceback.print_exc()
-            sm.add_widget(r)
+            s.initUI(sm)
         except Exception:
-            import traceback
-            print("Error importing RecipesScreens:")
+            print("Error initializing ViewListScreen:")
             traceback.print_exc()
+        sm.add_widget(s)
+
+        s = AddIngredsFromRecipeScreen(name='AddIngredsFromRecipeScreen')
+        try:
+            s.initUI(sm)
+        except Exception:
+            print("Error initializing AddIngredsFromRecipeScreen:")
+            traceback.print_exc()
+        sm.add_widget(s)
+
+        # Register recipe screens
+        r = RecipesMenu(name='RecipesMenu')
+        try:
+            r.initUI(sm)
+        except Exception:
+            print("Error initializing RecipesMenu:")
+            traceback.print_exc()
+        sm.add_widget(r)
+
+        r = RecipeViewList(name='ViewRecipesList')
+        try:
+            r.initUI(sm)
+        except Exception:
+            print("Error initializing RecipeViewList:")
+            traceback.print_exc()
+        sm.add_widget(r)
+
+        r = AddRecipeScreen(name='AddRecipeScreen')
+        try:
+            r.initUI(sm)
+        except Exception:
+            print("Error initializing AddRecipeScreen:")
+            traceback.print_exc()
+        sm.add_widget(r)
+
+        r = DeleteRecipeScreen(name='DelRecipeScreen')
+        try:
+            r.initUI(sm)
+        except Exception:
+            print("Error initializing DeleteRecipeScreen:")
+            traceback.print_exc()
+        sm.add_widget(r)
+
+        r = RecipeDetailScreen(name='RecipeDetail')
+        try:
+            r.initUI(sm)
+        except Exception:
+            print("Error initializing RecipeDetail:")
+            traceback.print_exc()
+        sm.add_widget(r)
+
 
         # Put the ScreenManager into the root layout's content area
         root.content_area.add_widget(sm)
@@ -245,7 +216,6 @@ class MyApp(App):
             elif bottom_px:
                 kivy_gap = bottom_px
             else:
-                from kivy.metrics import dp
                 kivy_gap = dp(80)
 
             # Set the spacer height
@@ -256,7 +226,6 @@ class MyApp(App):
         except Exception as e:
             # If anything fails, use a conservative dp-based spacer
             try:
-                from kivy.metrics import dp
                 self.root_layout.bottom_spacer.height = dp(80)
             except Exception:
                 pass
