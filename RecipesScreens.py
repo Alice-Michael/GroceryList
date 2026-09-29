@@ -13,6 +13,7 @@ from kivy.metrics import sp, dp
 
 # App imports
 from Recipes import Recipes
+from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
 
 recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Back"]
@@ -266,6 +267,10 @@ class RecipeDetailScreen(BaseScreen):
             title_size="20",
             back_target="RecipesMenu",
         )
+
+        btn = Button(text="Add to list", size_hint=(1, 0.1), on_press=self.button_click)
+        col1.add_widget(btn)
+
         # no list populated at init; display_recipe will populate when a recipe is selected
 
     def display_recipe(self, title):
@@ -308,6 +313,11 @@ class RecipeDetailScreen(BaseScreen):
     def button_click(self, instance):
         # Back button still uses BaseScreen.on_back
         if instance.text == "Back":
+            self.on_back(instance)
+        elif instance.text == "Add to list":
+            # Instantiate ShoppingList and call the method that expects self
+            sl = ShoppingList()
+            sl.add_items_from_recipe_book(find_recipe=self.title.text)
             self.on_back(instance)
         else:
             pass
