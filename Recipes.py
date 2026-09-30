@@ -1,12 +1,28 @@
 # python
 # Recipes
 
+import random
+
 # Files
 MY_FILE = "MyBuiltRecipes.txt"
 
 # Global Recipes buffer
 LIST_OF_INGREDIENTS_BUFFER = []
 
+
+def _read_file_for_titles():
+    list_of_recipes = []
+    try:
+        with open(MY_FILE, "r") as file:
+            for line in file:
+                recipe = line.strip()
+                if not recipe:
+                    continue
+                recipe_title, _, _ = recipe.partition(';')
+                list_of_recipes.append(recipe_title)
+    except FileNotFoundError:
+        return []
+    return list_of_recipes
 
 class Recipes:
     """
@@ -18,17 +34,8 @@ class Recipes:
     """
     @staticmethod
     def display():
-        list_of_recipes = []
-        try:
-            with open(MY_FILE, "r") as file:
-                for line in file:
-                    recipe = line.strip()
-                    if not recipe:
-                        continue
-                    recipe_title, _, _ = recipe.partition(';')
-                    list_of_recipes.append(recipe_title)
-        except FileNotFoundError:
-            return []
+        list_of_recipes = _read_file_for_titles()
+
         for i in list_of_recipes:
             print(f"{i}")
         return list_of_recipes
@@ -121,6 +128,12 @@ class Recipes:
         except Exception:
             return False
         return removed
+
+    @staticmethod
+    def propose_rand_title():
+        list_of_titles = _read_file_for_titles()
+        random_title = random.choice(list_of_titles)
+        return random_title
 
 
 def recipes_menu():

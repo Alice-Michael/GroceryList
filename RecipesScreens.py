@@ -16,12 +16,25 @@ from Recipes import Recipes
 from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
 
-recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Back"]
+recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Propose Recipe to cook", "Back"]
 
 
 class RecipesMenu(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    def _populate_detail_screen(self):
+        self.rand_recipe_title = Recipes.propose_rand_title()
+        # Try to get existing detail screen; if missing, create, init and register it dynamically.
+        try:
+            detail_screen = self.sm.get_screen("RecipeDetail")
+        except Exception:
+            # create, initialize and add the screen
+            detail_screen = RecipeDetailScreen(name="RecipeDetail")
+            detail_screen.initUI(self.sm)
+            self.sm.add_widget(detail_screen)
+        detail_screen.display_recipe(self.rand_recipe_title)
+
 
     def initUI(self, screen_manager_handle):
         # Use base helper to create layout (no Back button for main menu)
@@ -52,6 +65,9 @@ class RecipesMenu(BaseScreen):
             self.sm.current = "ViewRecipesList"
         elif option_text == "Add recipe":
             self.sm.current = "AddRecipeScreen"
+        elif option_text == "Propose Recipe to cook":
+            self._populate_detail_screen()
+            self.sm.current = "RecipeDetail"
         elif option_text == "Delete recipe":
             self.sm.current = "DelRecipeScreen"
         else:

@@ -30,6 +30,7 @@ original, totally new idea; a shopping list app.
 - Basic add/delete items to list
 - Auto organization of list
 - Add all items from a stored recipe
+- Propose a random recipe
 - Read recipes titles, read individual recipes stored ingredients list
 
 ## Build Directions
