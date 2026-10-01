@@ -19,8 +19,8 @@ class IconButton(ButtonBehavior, Image):
 
 
 # App imports
-from ShoppingList import ShoppingList
-from BaseScreen import BaseScreen
+from CORE.ShoppingList import ShoppingList
+from GUI.BaseScreen import BaseScreen
 
 
 class AddItemScreen(BaseScreen):

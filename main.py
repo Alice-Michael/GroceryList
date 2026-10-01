@@ -13,13 +13,13 @@ from kivy.metrics import dp
 import traceback
 
 # App
-from HomeScreen import Home
-from ShoppingListScreens import (
+from GUI.HomeScreen import Home
+from GUI.ShoppingListScreens import (
     AddItemScreen,
     ViewListScreen,
     AddIngredsFromRecipeScreen,
 )
-from RecipesScreens import (
+from GUI.RecipesScreens import (
     RecipesMenu,
     RecipeViewList,
     AddRecipeScreen,

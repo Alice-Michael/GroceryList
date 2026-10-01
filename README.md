@@ -49,7 +49,7 @@ environment, and has it's own list of dependencies.  Developing in a windows env
 was easy to get around this using WSL.  This is only for the packaging portion anyways.
 
 Running the unit test:
-From the Root Directory just run pytest and they will all get picked up.
+From the Root Directory or the tests directory you can simply run pytest and they will all get picked up.
 ```
 pytest
 ```

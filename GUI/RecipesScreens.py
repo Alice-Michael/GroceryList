@@ -12,9 +12,9 @@ from kivy.uix.scrollview import ScrollView
 from kivy.metrics import sp, dp
 
 # App imports
-from Recipes import Recipes
-from ShoppingList import ShoppingList
-from BaseScreen import BaseScreen
+from CORE.Recipes import Recipes
+from CORE.ShoppingList import ShoppingList
+from GUI.BaseScreen import BaseScreen
 
 recipes_menu_options = [
     "Show Recipes",

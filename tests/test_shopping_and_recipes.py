@@ -4,8 +4,8 @@ import random
 
 import pytest
 
-import ShoppingList
-import Recipes
+import CORE.ShoppingList as ShoppingList
+import CORE.Recipes as Recipes
 
 
 # ------------------------
