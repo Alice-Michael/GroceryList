@@ -40,12 +40,19 @@ original, totally new idea; a shopping list app.
 - Android SDK platform-tools
 - kivy
 - buildozer
+- pytest (running unit tests)
 - PlantUML (Documentation, the uml architecture image)
 
 ### Build directions
 A couple notes -- to package the app I used buildozer.  Buildozer only works in a linux 
 environment, and has it's own list of dependencies.  Developing in a windows environment, it
 was easy to get around this using WSL.  This is only for the packaging portion anyways.
+
+Running the unit test:
+From the Root Directory just run pytest and they will all get picked up.
+```
+pytest
+```
 
 Build the app:
 ```
