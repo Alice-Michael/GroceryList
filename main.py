@@ -28,10 +28,6 @@ from GUI.RecipesScreens import (
 )
 
 
-class MyScreenManager(ScreenManager):
-    pass
-
-
 class MyRootLayout(BoxLayout):
     """
     Root layout that contains a content area (where the ScreenManager is placed)
@@ -63,7 +59,7 @@ class MyApp(App):
             Window.fullscreen = "auto"
 
         # Create ScreenManager and register screens from other modules
-        sm = MyScreenManager()
+        sm = ScreenManager()
 
         # Home screen
         if Home:
