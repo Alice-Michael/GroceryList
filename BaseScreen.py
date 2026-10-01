@@ -30,19 +30,14 @@ class BaseScreen(Screen):
             self.sm.current = self.back_target
 
     def get_back_button(
-        self, text="Back",
-        size_hint=(1, 0.2),
-        pos_hint={"center_x": 0.5}
+        self, text="Back", size_hint=(1, 0.2), pos_hint={"center_x": 0.5}
     ):
         """
         Create (and store) a Back button wired to the default handler.
         Returns the Button so callers can add it to layouts.
         """
         self.back_btn = Button(
-            text=text,
-            size_hint=size_hint,
-            pos_hint=pos_hint,
-            on_press=self.on_back
+            text=text, size_hint=size_hint, pos_hint=pos_hint, on_press=self.on_back
         )
         return self.back_btn
 
@@ -104,11 +99,7 @@ class BaseScreen(Screen):
         return self.col1, self.back_btn
 
     def populate_list(
-        self,
-        col,
-        items,
-        font_name: str = "DejaVuSans",
-        item_height: int = 40
+        self, col, items, font_name: str = "DejaVuSans", item_height: int = 40
     ):
         """
         Populate `col` (a vertical BoxLayout) with a scrollable list of Buttons

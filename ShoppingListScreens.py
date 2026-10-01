@@ -17,6 +17,7 @@ import os
 class IconButton(ButtonBehavior, Image):
     pass
 
+
 # App imports
 from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
@@ -117,14 +118,22 @@ class ViewListScreen(BaseScreen):
         row_height = dp(40) * (app.scale if app else 1)
         for i in self.list_of_items:
             # horizontal row for item
-            row = BoxLayout(orientation='horizontal', size_hint_y=None, height=row_height)
+            row = BoxLayout(
+                orientation="horizontal", size_hint_y=None, height=row_height
+            )
             row.spacing = dp(8) * (app.scale if app else 1)
-            lbl = Label(text=f"{i}", size_hint_x=1, halign='left', valign='middle', font_name="DejaVuSans")
-            lbl.bind(size=lbl.setter('text_size'))
+            lbl = Label(
+                text=f"{i}",
+                size_hint_x=1,
+                halign="left",
+                valign="middle",
+                font_name="DejaVuSans",
+            )
+            lbl.bind(size=lbl.setter("text_size"))
 
             # delete button uses an image if available, otherwise fallback to text
             del_btn = IconButton(
-                source='images/x_icon.png',
+                source="images/x_icon.png",
                 size_hint_x=None,
                 width=row_height * 0.8,
                 allow_stretch=False,
@@ -132,13 +141,13 @@ class ViewListScreen(BaseScreen):
             )
             try:
                 # try to use an x icon file named 'x_icon.png'
-                del_btn.background_normal = 'images/x_icon.png'
-                del_btn.background_down = 'images/x_icon.png'
-                del_btn.text = ''
+                del_btn.background_normal = "images/x_icon.png"
+                del_btn.background_down = "images/x_icon.png"
+                del_btn.text = ""
                 # ensure button uses the image as-is
                 del_btn.background_color = (1, 1, 1, 1)
             except Exception:
-                del_btn.text = 'Del'
+                del_btn.text = "Del"
 
             # bind delete action; capture current item in default arg
             def _on_del(instance, item=i):
@@ -164,8 +173,8 @@ class ViewListScreen(BaseScreen):
 
     def _on_add_button(self, instance):
         # Navigate to the add-item screen
-        if hasattr(self, 'sm') and self.sm:
-            self.sm.current = 'AddItemScreen'
+        if hasattr(self, "sm") and self.sm:
+            self.sm.current = "AddItemScreen"
 
 
 class AddIngredsFromRecipeScreen(BaseScreen):
@@ -214,6 +223,7 @@ class AddIngredsFromRecipeScreen(BaseScreen):
             self.sm.current = "Home"
         else:
             pass
+
 
 # Screen Template
 # class SCREENNAME(BaseScreen):

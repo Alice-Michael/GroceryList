@@ -16,7 +16,13 @@ from Recipes import Recipes
 from ShoppingList import ShoppingList
 from BaseScreen import BaseScreen
 
-recipes_menu_options = ["Show Recipes", "Add recipe", "Delete recipe", "Propose Recipe to cook", "Back"]
+recipes_menu_options = [
+    "Show Recipes",
+    "Add recipe",
+    "Delete recipe",
+    "Propose Recipe to cook",
+    "Back",
+]
 
 
 class RecipesMenu(BaseScreen):
@@ -34,7 +40,6 @@ class RecipesMenu(BaseScreen):
             detail_screen.initUI(self.sm)
             self.sm.add_widget(detail_screen)
         detail_screen.display_recipe(self.rand_recipe_title)
-
 
     def initUI(self, screen_manager_handle):
         # Use base helper to create layout (no Back button for main menu)
@@ -139,7 +144,9 @@ class AddRecipeScreen(BaseScreen):
 
         # Row to enter qty and item and add to pending list
         row = BoxLayout(size_hint=(1, 0.1))
-        self._qty_input = TextInput(hint_text="Qty", size_hint=(0.2, 1), input_filter="int")
+        self._qty_input = TextInput(
+            hint_text="Qty", size_hint=(0.2, 1), input_filter="int"
+        )
         self._item_input = TextInput(hint_text="Item name", size_hint=(0.6, 1))
         add_btn = Button(text="Add item", size_hint=(0.2, 1))
         add_btn.bind(on_press=self._on_add_item)
@@ -174,7 +181,11 @@ class AddRecipeScreen(BaseScreen):
         self._items_container.clear_widgets()
         app = App.get_running_app()
         for it in self._pending_items:
-            self._items_container.add_widget(Label(text=it, size_hint_y=None, height=dp(30) * (app.scale if app else 1)))
+            self._items_container.add_widget(
+                Label(
+                    text=it, size_hint_y=None, height=dp(30) * (app.scale if app else 1)
+                )
+            )
         # clear inputs
         self._qty_input.text = ""
         self._item_input.text = ""
@@ -229,7 +240,9 @@ class DeleteRecipeScreen(BaseScreen):
             back_target="RecipesMenu",
         )
 
-        self._title_input = TextInput(hint_text="Recipe title to delete", size_hint=(1, 0.1))
+        self._title_input = TextInput(
+            hint_text="Recipe title to delete", size_hint=(1, 0.1)
+        )
         col1.add_widget(self._title_input)
 
         btn = Button(text="Delete", size_hint=(1, 0.1))
@@ -271,6 +284,7 @@ class RecipeDetailScreen(BaseScreen):
     Shows the ingredient list for a selected recipe.
     Call `display_recipe(title)` before switching to this screen.
     """
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._current_scroll = None
@@ -319,7 +333,11 @@ class RecipeDetailScreen(BaseScreen):
 
         app = App.get_running_app()
         for ingr in ingredients:
-            lbl = Label(text=str(ingr), size_hint_y=None, height=dp(30) * (app.scale if app else 1))
+            lbl = Label(
+                text=str(ingr),
+                size_hint_y=None,
+                height=dp(30) * (app.scale if app else 1),
+            )
             list_grid.add_widget(lbl)
 
         scroll.add_widget(list_grid)

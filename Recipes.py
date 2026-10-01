@@ -18,11 +18,12 @@ def _read_file_for_titles():
                 recipe = line.strip()
                 if not recipe:
                     continue
-                recipe_title, _, _ = recipe.partition(';')
+                recipe_title, _, _ = recipe.partition(";")
                 list_of_recipes.append(recipe_title)
     except FileNotFoundError:
         return []
     return list_of_recipes
+
 
 class Recipes:
     """
@@ -32,6 +33,7 @@ class Recipes:
         add_recipe(title, items)
         delete_recipe(title)
     """
+
     @staticmethod
     def display():
         list_of_recipes = _read_file_for_titles()
@@ -57,10 +59,14 @@ class Recipes:
                     recipe = line.strip()
                     if not recipe:
                         continue
-                    recipe_title, _, list_of_ingredients = recipe.partition(';')
+                    recipe_title, _, list_of_ingredients = recipe.partition(";")
                     if recipe_title.strip().casefold() == target:
                         if list_of_ingredients:
-                            ingredients = [i.strip() for i in list_of_ingredients.split(';') if i.strip()]
+                            ingredients = [
+                                i.strip()
+                                for i in list_of_ingredients.split(";")
+                                if i.strip()
+                            ]
                         break
         except FileNotFoundError:
             return []
@@ -120,7 +126,7 @@ class Recipes:
         try:
             with open(MY_FILE, "w") as file:
                 for line in lines:
-                    recipe_title, _, rest = line.partition(';')
+                    recipe_title, _, rest = line.partition(";")
                     if recipe_title.strip().casefold() == target:
                         removed = True
                         continue
@@ -151,14 +157,14 @@ def recipes_options():
         recipes_menu()
 
         choice = input("Enter your choice by number: ")
-    
-        if choice == '1':
+
+        if choice == "1":
             display_recipes()
-        elif choice == '2':
+        elif choice == "2":
             add_recipe_to_list()
-        elif choice == '3':
+        elif choice == "3":
             remove_recipe_from_list()
-        elif choice == '9':
+        elif choice == "9":
             print("Returning to main menu")
             recipes_options = False
         else:
@@ -178,7 +184,7 @@ def display_recipes():
 def write_recipe_to_file(title):
     line_to_write = title.capitalize() + ";" + ";".join(LIST_OF_INGREDIENTS_BUFFER)
     with open(MY_FILE, "a") as file:
-        file.write(line_to_write + '\n')
+        file.write(line_to_write + "\n")
     return
 
 
@@ -187,16 +193,18 @@ def get_item_for_recipe():
 
     while adding:
         item_for_recipe = input("Enter item: ")
-        if not (2 <= len(item_for_recipe) <= 100):    
+        if not (2 <= len(item_for_recipe) <= 100):
             print("item length out of range.")
             continue
         else:
             adjusting_size = True
             while adjusting_size == True:
                 num_items = input("Enter how many: ")
-                if (int(num_items) > 20):
-                    response = input(f"You entered a large quantity, is {num_items} accurate? (y/n)")
-                    if response == 'y':
+                if int(num_items) > 20:
+                    response = input(
+                        f"You entered a large quantity, is {num_items} accurate? (y/n)"
+                    )
+                    if response == "y":
                         print(f"adding {num_items} of {item_for_recipe} to recipe")
                         adjusting_size = False
                 else:
@@ -204,10 +212,10 @@ def get_item_for_recipe():
                     adjusting_size = False
 
         still_adding = input("More items to add? (y/n): ")
-        if still_adding != 'y':
+        if still_adding != "y":
             adding = False
 
-        LIST_OF_INGREDIENTS_BUFFER.append(num_items + ' ' + item_for_recipe)
+        LIST_OF_INGREDIENTS_BUFFER.append(num_items + " " + item_for_recipe)
 
     return
 
@@ -236,7 +244,7 @@ def remove_recipe_from_list():
 
     with open(MY_FILE, "w") as file:
         for line in temp_recipes:
-            recipe_title, _, _ = line.partition(';')
+            recipe_title, _, _ = line.partition(";")
             if recipe_title == recipe_to_delete.capitalize():
                 not_deleting_line = False
                 print(f"Removing {recipe_title}")

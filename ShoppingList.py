@@ -14,12 +14,13 @@ _needs_organizing = True
 
 class ShoppingList:
     """
-        API:
-            display
-            add_item
-            delete_item(item)
-            add_items_from_recipe_book(recipe_title)
+    API:
+        display
+        add_item
+        delete_item(item)
+        add_items_from_recipe_book(recipe_title)
     """
+
     @staticmethod
     def display():
         global _needs_organizing
@@ -127,6 +128,7 @@ class ShoppingList:
 # Internal helpers (module-level)
 # ------------------------
 
+
 def _parse_qty_and_name(item_str: str) -> Tuple[int, str]:
     """
     Parse a string that may start with an integer quantity followed by an item name.
@@ -160,7 +162,7 @@ def _format_item_line(qty: int, name: str) -> str:
 def _add_or_increment(incoming_item: str) -> None:
     """
     Add the incoming item to the ITEMS file, or if an item with the same name
-    already exists, increment its quantity. 
+    already exists, increment its quantity.
     """
     global _needs_organizing
 
@@ -217,6 +219,7 @@ def _parse_ingredients(list_of_ingredients: str) -> List[str]:
 # Organization helpers
 # ------------------------
 
+
 def _build_category_lookup() -> Dict[str, Set[str]]:
     """
     Return a mapping from category name to a set of canonical item strings to match against.
@@ -224,21 +227,59 @@ def _build_category_lookup() -> Dict[str, Set[str]]:
     """
     return {
         "Produce": {
-            "apple", "banana", "orange", "lettuce", "spinach", "tomato", "potato", "onion",
-            "garlic", "carrot", "cucumber", "pepper", "avocado", "salad", "sweet potato",
-            "broccoli"
+            "apple",
+            "banana",
+            "orange",
+            "lettuce",
+            "spinach",
+            "tomato",
+            "potato",
+            "onion",
+            "garlic",
+            "carrot",
+            "cucumber",
+            "pepper",
+            "avocado",
+            "salad",
+            "sweet potato",
+            "broccoli",
         },
         "Shelf-stable": {
-            "rice", "pasta", "bread", "flour", "sugar", "cereal", "beans", "lentils",
-            "oil", "spices", "salt", "coffee", "tea"
+            "rice",
+            "pasta",
+            "bread",
+            "flour",
+            "sugar",
+            "cereal",
+            "beans",
+            "lentils",
+            "oil",
+            "spices",
+            "salt",
+            "coffee",
+            "tea",
         },
         "Fridge": {
-            "milk", "cheese", "butter", "yogurt", "eggs", "cream", "deli", "ham", "bacon",
-            "beefnt"
+            "milk",
+            "cheese",
+            "butter",
+            "yogurt",
+            "eggs",
+            "cream",
+            "deli",
+            "ham",
+            "bacon",
+            "beefnt",
         },
         "Frozen": {
-            "peas", "corn", "ice cream", "frozen pizza", "frozen vegetables", "shrimp",
-            "chicken", "hamburger patties"
+            "peas",
+            "corn",
+            "ice cream",
+            "frozen pizza",
+            "frozen vegetables",
+            "shrimp",
+            "chicken",
+            "hamburger patties",
         },
     }
 

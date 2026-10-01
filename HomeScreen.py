@@ -23,16 +23,20 @@ class Home(Screen):
     def initUI(self, screen_manager_handle):
         self.sm = screen_manager_handle
         app = App.get_running_app()
-        self.title = Label(text="Get Food", font_size=sp(24) * (app.scale if app else 1), font_name="DejaVuSans")
+        self.title = Label(
+            text="Get Food",
+            font_size=sp(24) * (app.scale if app else 1),
+            font_name="DejaVuSans",
+        )
 
         # Add Widgets to layout
         self.master = BoxLayout()
-        col1 = BoxLayout(orientation='vertical', padding=15)
+        col1 = BoxLayout(orientation="vertical", padding=15)
 
         # Logo (if present) above the title
         try:
             # Limit logo to the top portion so menu remains visible
-            logo = Image(source='images/logo.png', size_hint=(1, 1))
+            logo = Image(source="images/logo.png", size_hint=(1, 1))
             print(f"Home: logo widget created, source=images/logo.png")
             col1.add_widget(logo)
         except Exception as e:
@@ -45,10 +49,10 @@ class Home(Screen):
         # Menu options
         for i in menu_options:
             btn = Button(
-                text = f'{i}',
-                size_hint = (1, 0.2),
-                pos_hint = {'center_x':0.5},
-                on_press = self.button_click
+                text=f"{i}",
+                size_hint=(1, 0.2),
+                pos_hint={"center_x": 0.5},
+                on_press=self.button_click,
             )
             col1.add_widget(btn)
 
@@ -64,7 +68,6 @@ class Home(Screen):
 
         # now add this to myself
         self.add_widget(self.master)
-
 
     def button_click(self, instance):
         text = instance.text
