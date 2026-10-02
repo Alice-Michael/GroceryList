@@ -1,5 +1,6 @@
 # kivy includes
-import trace
+import traceback
+
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 from kivy.core.window import Window
@@ -9,8 +10,6 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.widget import Widget
 from kivy.clock import mainthread
 from kivy.metrics import dp
-
-import traceback
 
 # App
 from GUI.HomeScreen import Home
@@ -235,7 +234,7 @@ class MyApp(App):
                 self.root_layout.bottom_spacer.height = kivy_gap
             except Exception:
                 pass
-        except Exception as e:
+        except Exception:
             # If anything fails, use a conservative dp-based spacer
             try:
                 self.root_layout.bottom_spacer.height = dp(80)

@@ -7,7 +7,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import Screen
 from kivy.app import App
-from kivy.metrics import sp, dp
+from kivy.metrics import sp
 
 menu_options = [
     "View list",

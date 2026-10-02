@@ -1,13 +1,10 @@
 # kivy imports
 from kivy.app import App
-from kivy.metrics import sp, dp
+from kivy.metrics import dp
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
-from kivy.uix.dropdown import DropDown
-from kivy.uix.screenmanager import Screen, ScreenManager
-from kivy.uix.gridlayout import GridLayout
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
 import os
