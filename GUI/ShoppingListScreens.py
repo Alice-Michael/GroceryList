@@ -1,3 +1,5 @@
+import os
+
 # kivy imports
 from kivy.app import App
 from kivy.metrics import dp
@@ -7,7 +9,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.image import Image
-import os
 
 
 # Small Image-button class that preserves image aspect ratio and acts like a button

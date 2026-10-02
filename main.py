@@ -1,5 +1,6 @@
 # kivy includes
 import traceback
+import os
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
@@ -12,6 +13,7 @@ from kivy.clock import mainthread
 from kivy.metrics import dp
 
 # App
+from GUI.ErrorScreen import ErrorScreen
 from GUI.HomeScreen import Home
 from GUI.ShoppingListScreens import (
     AddItemScreen,
@@ -57,84 +59,65 @@ class MyApp(App):
         if platform == "android":
             Window.fullscreen = "auto"
 
-        # Create ScreenManager and register screens from other modules
+        # Create ScreenManager and register Home screen so we can start creating things
         sm = ScreenManager()
+        h = Home(name="Home")
+        h.initUI(sm)
+        sm.add_widget(h)
+        sm.current = "Home"
 
-        # Home screen
-        if Home:
-            h = Home(name="Home")
+        # Set up space in case there is an error.  Setting this after the home screen init
+        # means we don't create this first and then switch to the Home screen!
+        error_screen = ErrorScreen()
+        sm.add_widget(error_screen)
+        failed_screen_name = "Unknown Screen"
+
+        # Init the Home screen
+        try:
+            screens_to_init = []
+
+            # Shopping list screens
+            screens_to_init.extend(
+                [
+                    AddItemScreen(name="AddItemScreen"),
+                    ViewListScreen(name="ViewListScreen"),
+                    AddIngredsFromRecipeScreen(name="AddIngredsFromRecipeScreen"),
+                ]
+            )
+
+            # Recipes screens
+            screens_to_init.extend(
+                [
+                    RecipesMenu(name="RecipesMenu"),
+                    RecipeViewList(name="ViewRecipesList"),
+                    AddRecipeScreen(name="AddRecipeScreen"),
+                    DeleteRecipeScreen(name="DelRecipeScreen"),
+                    RecipeDetailScreen(name="RecipeDetail"),
+                ]
+            )
+            for screen in screens_to_init:
+                # If any screen fails here, it drops directly to the except block, so we
+                # can update the name now in case it fails to track down in the logs
+                # what is failing.
+                failed_screen_name = f"{screen.__class__.__name__} inside initUI"
+                screen.initUI(sm)
+                sm.add_widget(screen)
+        except Exception as e:
             try:
-                h.initUI(sm)
-            except Exception:
-                print("Error initializing Home screen:")
-                traceback.print_exc()
-            sm.add_widget(h)
-
-        # Register shopping list screens
-        s = AddItemScreen(name="AddItemScreen")
-        try:
-            s.initUI(sm)
-        except Exception:
-            print("Error initializing AddItemScreen:")
-            traceback.print_exc()
-        sm.add_widget(s)
-
-        s = ViewListScreen(name="ViewListScreen")
-        try:
-            s.initUI(sm)
-        except Exception:
-            print("Error initializing ViewListScreen:")
-            traceback.print_exc()
-        sm.add_widget(s)
-
-        s = AddIngredsFromRecipeScreen(name="AddIngredsFromRecipeScreen")
-        try:
-            s.initUI(sm)
-        except Exception:
-            print("Error initializing AddIngredsFromRecipeScreen:")
-            traceback.print_exc()
-        sm.add_widget(s)
-
-        # Register recipe screens
-        r = RecipesMenu(name="RecipesMenu")
-        try:
-            r.initUI(sm)
-        except Exception:
-            print("Error initializing RecipesMenu:")
-            traceback.print_exc()
-        sm.add_widget(r)
-
-        r = RecipeViewList(name="ViewRecipesList")
-        try:
-            r.initUI(sm)
-        except Exception:
-            print("Error initializing RecipeViewList:")
-            traceback.print_exc()
-        sm.add_widget(r)
-
-        r = AddRecipeScreen(name="AddRecipeScreen")
-        try:
-            r.initUI(sm)
-        except Exception:
-            print("Error initializing AddRecipeScreen:")
-            traceback.print_exc()
-        sm.add_widget(r)
-
-        r = DeleteRecipeScreen(name="DelRecipeScreen")
-        try:
-            r.initUI(sm)
-        except Exception:
-            print("Error initializing DeleteRecipeScreen:")
-            traceback.print_exc()
-        sm.add_widget(r)
-
-        r = RecipeDetailScreen(name="RecipeDetail")
-        try:
-            r.initUI(sm)
-        except Exception:
-            print("Error initializing RecipeDetail:")
-            traceback.print_exc()
-        sm.add_widget(r)
+                # Pushes the crash log to the application's private app data folder on Android
+                app_dir = App.get_running_app().user_data_dir
+                log_path = os.path.join(app_dir, "crash_log.txt")
+                with open(log_path, "w") as log_file:
+                    log_file.write(f"CRASH OCCURRED ON SCREEN: {failed_screen_name}\n")
+                    log_file.write("=" * 40 + "\n")
+                    traceback.print_exc(file=log_file)
+            except Exception as log_error:
+                # This prints to the console for terminal debugging...
+                print(f"Critically failed to save Android log file: {log_error}")
+                print(f"Error e was: {e}")
+                print(f"Crash failed on screen: {failed_screen_name}")
+            # After logging, route to error screen
+            sm.current = "error_screen"
 
         # Put the ScreenManager into the root layout's content area
         root.content_area.add_widget(sm)
