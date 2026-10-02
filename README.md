@@ -68,3 +68,24 @@ adb.exe install -r bin/*.apk
 
 ## Architecture
 ![Architecture Diagram](./uml/architecture.png)
+
+## Screen Captures
+A few screen grabs of what it looks like while running.  I ran it through a basic
+workflow.  Open the app, look at the list, go look at the recipes to figure out what
+sounds good enough to eat, hit the button to add it to the list, paranoid switch
+over to look at what's on the list.
+
+Home Screen:\
+![Home Screen](./images/ForREADME/V1/HomeScreen.png)
+
+List Screen:\
+![List](./images/ForREADME/V1/List.png)
+
+Recipes stored in local storage:\
+![Recipes](./images/ForREADME/V1/Recipes.png)
+
+The stored recipe view\
+![Detailed Recipe Screen](./images/ForREADME/V1/DetailedRecipeScreen.png)
+
+Updated list after adding the recipe\
+![Updated List](./images/ForREADME/V1/UpdatedList.png)

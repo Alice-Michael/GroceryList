@@ -78,7 +78,7 @@ class ViewListScreen(BaseScreen):
     def initUI(self, screen_manager_handle):
         col1, back_btn = self.setup_screen(
             screen_manager_handle,
-            title_text="MyShoppingListApp",
+            title_text="My List",
             title_size="45",
             back_target="Home",
         )

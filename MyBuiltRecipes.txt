@@ -1,6 +1,5 @@
-Spaghetti Sauce
-Lasagna
-Alfredo Sauce
-Burgers and Fries
-Toy;1 apple;2 orange;5 cod
-Toy2;1 apple
+Breakfast Sandwhiches;1 Eggs(dozen);1 English Muffins;1 Frozen Sausages
+Work Lunch;1 Chicken;1 Lettuce;2 Carrots;1 Onion;1 Cheese
+Walnut Cream Sauce;1 Walnut;1 Heavy Whipping Cream;1 Butter
+Fajitas;1 Beefnt;2 Bell Pepper;1 Onion;1 Zucchini;1 Sour Cream;1 Cheese
+Carb Free Lasagna;2 Zucchini;1 Onion;2 Bell Pepper;1 Beefn't;2 Tomato Sauce;1 RicottaTesting;1 Apple
