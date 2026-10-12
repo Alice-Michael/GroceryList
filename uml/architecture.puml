@@ -47,7 +47,8 @@ BaseScreen <|-- ViewListScreen
 BaseScreen <|-- AddIngredsFromRecipeScreen
 Screen <|-- Home
 
-MyScreenManager ..|> ScreenManager
+' corrected: show ScreenManager as the parent of MyScreenManager
+ScreenManager <|-- MyScreenManager
 
 class RecipesMenu <<BaseScreen>>
 class RecipeViewList <<BaseScreen>>
